@@ -346,7 +346,7 @@ const state={
   imperialUrls:{left:null,right:null},
   infoBgUrls:[null,null,null],
   musicDataUrl:null,musicAudio:null,musicVolume:0.5,
-  tune:{left:2.5,top:34,w:92,h:34.5,ileft:0,itop:78,iw:98.5,ih:20,sl:0,sr:80,st:21.5,sw:100,sh:9,nb:33,nfs:31},
+  tune:{left:2.5,top:34,w:95.5,h:34.5,ileft:0,itop:78,iw:98,ih:20,sl:0,sr:80,st:21.5,sw:100,sh:8,nb:33,nfs:28},
   names:['平靜','憤怒','歡樂'],
   quotes:{
     calm:[{title:'老衲心如止水',sub:'有事速速奏來，無妨 🙏',emoji:['💧','🪷','☁️','✨','🕊️','📜']},{title:'朕今日甚安',sub:'有事啟奏，無事退朝',emoji:['💧','🪷','☁️','✨','🍵','📜']},{title:'吾心靜如秋水',sub:'有話直說，老衲聽著',emoji:['🕊️','☁️','✨','🪷','💧','📋']},{title:'老衲入禪中',sub:'汝之事...准了',emoji:['🧘','🪷','☁️','💧','✨','☕']}],
@@ -354,7 +354,7 @@ const state={
     happy:[{title:'老衲龍心大悅！',sub:'所求之事，盡管奏來 ✨',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','📈']},{title:'哈哈哈！甚合吾意',sub:'今日汝所求，皆可准',emoji:['⭐','🎵','💎','🎊','🌟','💰','🏆','📈']},{title:'大善！大善！',sub:'此時不請，更待何時？',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','🏆']},{title:'妙哉！妙哉！',sub:'此事老衲全力支持！',emoji:['⭐','💎','🎊','🌟','💰','🎁','📈','🏆']},{title:'朕心花怒放',sub:'汝且趁機多要些預算 😏',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','📈']}]
   },
   mixedHints:['老衲今日心情嘛…難說','此事容老衲三思','汝先退下，改日再議','莫催莫急，老衲正想著','吾意未定，再占一卦？','此事複雜，老衲需再斟酌','嗯...汝先放著，老衲看看','龍意難測，且觀且行'],
-  balance:1000,initialBalance:1000,bet:10,tripleProbs:[10,5,3],weights:[5,3,2],multipliers:[2,5,20],
+  balance:1000,initialBalance:1000,bet:10,tripleProbs:[40,10,30],weights:[5,3,2],multipliers:[2,5,20],
   lastWin:0,spinning:false,audioCtx:null,masterGain:null,soundOn:true
 };
 
@@ -479,7 +479,7 @@ function startGame(){
   state.symbols.forEach((s,i)=>document.getElementById('reel-img-'+i).src=s);
   applyDecorations();
   const t=state.tune;
-  ['left','top','w','h','ileft','itop','iw','ih','sl','sr','st','sw','sh'].forEach(k=>{
+  ['left','top','w','h','ileft','itop','iw','ih','sl','sr','st','sw','sh','nb','nfs'].forEach(k=>{
     const el=document.getElementById('tune-'+k);
     if(el){el.value=t[k];document.getElementById('tune-'+k+'-v').textContent=t[k]}
   });
@@ -745,7 +745,15 @@ function doExport(){
   const bgImg=document.getElementById('throne-bg-img');if(bgImg)bgImg.removeAttribute('src');
   ['left','right'].forEach(s=>{const i=document.getElementById('imp-img-'+s);if(i)i.removeAttribute('src')});
   for(let i=0;i<3;i++){const e=document.getElementById('info-bg-'+i);if(e)e.removeAttribute('src')}
+  // [FIX] 關掉所有開著的 modal/overlay/校準 HUD，不然 outerHTML 會把 show class 序列化進匯出版
+  document.querySelectorAll('.modal-backdrop.show,.win-overlay.show,.mixed-hint.show,.tuner.show').forEach(m=>m.classList.remove('show'));
+  // [FIX] 直接將 setup/game-screen 設為匯出版目標狀態，抜 outerHTML 後還原
+  // （這樣 outerHTML 序列化時就已經帶 display:none / display:flex，不用再 string replace）
+  const _sE=document.getElementById('setup-screen'),_gE=document.getElementById('game-screen');
+  const _sD=_sE.style.display,_gD=_gE.style.display;
+  _sE.style.display='none';_gE.style.display='flex';
   let html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  _sE.style.display=_sD;_gE.style.display=_gD;
   // restore live DOM
   state.symbols.forEach((s,i)=>{const rimg=document.getElementById('reel-img-'+i);if(rimg)rimg.src=s});
   if(state.bgDataUrl)bgImg.src=state.bgDataUrl;
@@ -757,10 +765,12 @@ function doExport(){
   html=html.replace(/infoBgUrls:\[null,null,null\]/,'infoBgUrls:'+JSON.stringify(state.infoBgUrls));
   if(state.musicDataUrl)html=html.replace(/musicDataUrl:null/,'musicDataUrl:'+JSON.stringify(state.musicDataUrl));
   html=html.replace(/tune:\{[^}]+\}/,'tune:'+JSON.stringify(state.tune));
-  html=html.replace('id="setup-screen" class="screen"','id="setup-screen" class="screen" style="display:none"');
-  html=html.replace('id="game-screen" class="screen" style="display:none"','id="game-screen" class="screen" style="display:flex"');
-  const initScript='<'+'script>window.addEventListener("DOMContentLoaded",function(){state.symbols.forEach(function(s,i){var img=document.getElementById("reel-img-"+i);if(img)img.src=s});applyDecorations();if(state.musicDataUrl){var v=document.createElement("video");v.loop=true;v.volume=state.musicVolume;v.style.display="none";v.playsInline=true;v.preload="auto";v.src=state.musicDataUrl;document.body.appendChild(v);state.musicAudio=v}renderInfo();applyTune();var started=false;var startAll=function(){if(started)return;started=true;initAudio();if(state.musicAudio)state.musicAudio.play().catch(function(){});["click","touchend","keydown"].forEach(function(ev){document.body.removeEventListener(ev,startAll)})};["click","touchend","keydown"].forEach(function(ev){document.body.addEventListener(ev,startAll)})});</'+'script>';
-  html=html.replace('</body>',initScript+'</body>');
+  // [已移除] 不再需要 screen display replace——上面 outerHTML 序列化時已帶目標 display 狀態
+  const initScript='<'+'script>window.addEventListener("DOMContentLoaded",function(){state.symbols.forEach(function(s,i){var img=document.getElementById("reel-img-"+i);if(img)img.src=s});applyDecorations();if(state.musicDataUrl){var v=document.createElement("video");v.loop=true;v.volume=state.musicVolume;v.style.display="none";v.playsInline=true;v.preload="auto";v.src=state.musicDataUrl;document.body.appendChild(v);state.musicAudio=v}renderInfo();["left","top","w","h","ileft","itop","iw","ih","sl","sr","st","sw","sh","nb","nfs"].forEach(function(k){var el=document.getElementById("tune-"+k);if(el){el.value=state.tune[k];var v=document.getElementById("tune-"+k+"-v");if(v)v.textContent=state.tune[k]}});applyTune();var started=false;var startAll=function(){if(started)return;started=true;initAudio();if(state.musicAudio)state.musicAudio.play().catch(function(){});["click","touchend","keydown"].forEach(function(ev){document.body.removeEventListener(ev,startAll)})};["click","touchend","keydown"].forEach(function(ev){document.body.addEventListener(ev,startAll)})});</'+'script>';
+  // [FIX 關鍵] 用 lastIndexOf 定位真正的 body closing tag；不能用 html.replace('</body>', ...)，
+  // 因為 doExport 自己的源碼含 body closing 字串會愇先匹配、會導致源碼被破壞。
+  const _bodyIdx=html.lastIndexOf('</body>');
+  html=html.substring(0,_bodyIdx)+initScript+html.substring(_bodyIdx);
   const blob=new Blob([html],{type:'text/html;charset=utf-8'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='水豚王聖意占卜.html';
