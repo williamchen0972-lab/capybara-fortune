@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🎰 水豚王聖意占卜</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow-x:hidden;touch-action:manipulation}
+body{font-family:'Noto Serif TC','PingFang TC','Microsoft JhengHei',serif;background:radial-gradient(ellipse at 20% 10%,rgba(255,215,0,0.12) 0%,transparent 45%),radial-gradient(ellipse at 80% 90%,rgba(140,0,0,0.28) 0%,transparent 55%),linear-gradient(180deg,#1A0510 0%,#3D0F20 45%,#2A0818 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:10px 8px;user-select:none;-webkit-user-select:none;position:relative}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><g fill='none' stroke='%23FFD700' stroke-opacity='0.05' stroke-width='1'><path d='M40 8 Q55 22 40 38 Q25 22 40 8'/><path d='M8 40 Q22 55 38 40 Q22 25 8 40'/><path d='M40 72 Q55 58 40 42 Q25 58 40 72'/><path d='M72 40 Q58 55 42 40 Q58 25 72 40'/></g></svg>");pointer-events:none;z-index:0}
+.ambient-star{position:fixed;font-size:14px;opacity:0.5;animation:float-up 9s linear infinite;pointer-events:none;z-index:1}
+@keyframes float-up{0%{transform:translateY(0) rotate(0);opacity:0}10%,90%{opacity:0.5}100%{transform:translateY(-110vh) rotate(360deg);opacity:0}}
+.screen{width:100%;max-width:430px;display:flex;flex-direction:column;align-items:center;position:relative;z-index:10}
+
+.setup-card{background:linear-gradient(145deg,#FFF8F0 0%,#FFF4E5 100%);border-radius:24px;padding:24px 20px;box-shadow:0 0 0 3px #FFD700 inset,0 0 0 5px #3E2723 inset,0 20px 60px rgba(0,0,0,0.6);width:100%;position:relative;overflow:hidden}
+.setup-card::before{content:'';position:absolute;top:-30%;left:-30%;right:-30%;height:40%;background:radial-gradient(ellipse,rgba(255,255,255,0.4),transparent 70%);pointer-events:none}
+.setup-title{font-size:25px;font-weight:900;color:#3E1410;text-align:center;margin-bottom:4px;letter-spacing:4px;text-shadow:1px 1px 0 rgba(255,215,0,0.5)}
+.setup-subtitle{font-size:12px;color:#8B4513;text-align:center;margin-bottom:14px;line-height:1.6;letter-spacing:2px;font-style:italic}
+.setup-divider{height:2px;background:linear-gradient(90deg,transparent,#FFD700 20%,#8B0000 50%,#FFD700 80%,transparent);margin:0 0 14px}
+.section-label{font-size:11px;color:#8B4513;letter-spacing:3px;font-weight:900;margin:10px 0 6px;padding-left:2px}
+.upload-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.upload-grid.horiz{flex-direction:row;gap:6px}
+.upload-grid.horiz .upload-slot{flex:1;padding:7px;flex-direction:column;align-items:center;text-align:center;gap:5px}
+.upload-grid.horiz .upload-preview{width:46px;height:46px;font-size:20px}
+.upload-grid.horiz .upload-label-title{font-size:11px;letter-spacing:1px}
+.upload-grid.horiz .upload-label-hint{font-size:9px}
+.upload-slot{display:flex;align-items:center;gap:11px;padding:10px;background:linear-gradient(145deg,#FAF0E4,#F0DCC0);border:2px dashed #B8860B;border-radius:14px;cursor:pointer;transition:all 0.25s}
+.upload-slot.filled{border-style:solid;border-color:#4ECDC4;background:linear-gradient(145deg,#E8F9F7,#D4F1EE);box-shadow:0 4px 12px rgba(78,205,196,0.25)}
+.upload-slot:active{transform:scale(0.98)}
+.upload-preview{width:50px;height:50px;border-radius:11px;background:linear-gradient(145deg,#FFF5E5,#FFE8C8);display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;flex-shrink:0;border:2px solid rgba(139,69,19,0.3)}
+.upload-preview img{width:100%;height:100%;object-fit:cover}
+.upload-label{flex:1;min-width:0}
+.upload-label-title{font-weight:900;color:#3E1410;font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;letter-spacing:1px}
+.badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:1px}
+.b1{background:#C7E9F7;color:#1E5B8C}.b2{background:#FFD5C7;color:#B83C1C}.b3{background:#FFE5AA;color:#B87B00}
+.b-opt{background:#E0E0E0;color:#555}.b-reco{background:#FFD700;color:#3E1410}
+.upload-label-hint{color:#8B4513;font-size:10px;margin-top:2px;line-height:1.4;font-style:italic;word-break:break-all}
+.upload-slot input{display:none}
+.start-btn{width:100%;padding:15px;background:linear-gradient(145deg,#D4AF37 0%,#FFD700 30%,#B8860B 100%);color:#3E1410;border:3px solid #3E1410;border-radius:16px;font-size:18px;font-weight:900;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.3),0 2px 0 rgba(255,255,255,0.4) inset,0 -3px 0 rgba(0,0,0,0.2) inset;transition:all 0.15s;letter-spacing:10px;position:relative;overflow:hidden;text-shadow:1px 1px 0 rgba(255,255,255,0.3);margin-top:8px}
+.start-btn:active:not(:disabled){transform:scale(0.97)}
+.start-btn:disabled{opacity:0.35;cursor:not-allowed;box-shadow:none}
+.start-btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.6),transparent);animation:shine 3s infinite}
+@keyframes shine{0%{left:-100%}50%,100%{left:100%}}
+.start-btn:disabled::after{display:none}
+.start-btn.has-img,.spin-btn.has-img{background:transparent!important;border:none!important;box-shadow:0 4px 12px rgba(0,0,0,0.4)!important;padding:4px;letter-spacing:0;text-shadow:none;overflow:visible;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.4))}
+.start-btn.has-img::after,.spin-btn.has-img::after{display:none}
+.start-btn.has-img:active:not(:disabled),.spin-btn.has-img:active:not(:disabled){transform:scale(0.97)}
+.btn-img{width:100%;height:auto;display:block;border-radius:10px;pointer-events:none}
+.start-btn.has-img #qg-btn-text,.spin-btn.has-img #zb-btn-text{display:none}
+
+.throne-machine{position:relative;width:100%;aspect-ratio:9/16;border-radius:22px;overflow:hidden;background:#3E1410;box-shadow:0 0 0 2px rgba(255,215,0,0.5),0 20px 50px rgba(0,0,0,0.6)}
+.throne-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;pointer-events:none;z-index:1}
+.throne-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#FFE66D;font-size:14px;letter-spacing:2px;text-align:center;padding:30px;line-height:1.8;z-index:0}
+.corner-title{position:absolute;top:2.5%;left:3.5%;z-index:5;color:#FFE66D;font-weight:900;font-size:13px;letter-spacing:3px;text-shadow:0 1px 0 #3E1410,0 0 6px rgba(0,0,0,0.8);display:flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(0,0,0,0.25);border-radius:999px;backdrop-filter:blur(4px)}
+.corner-controls{position:absolute;top:2.5%;right:3.5%;z-index:5;display:flex;gap:5px}
+.icon-btn{width:30px;height:30px;background:linear-gradient(145deg,#FFF,#D0D0D0);border:2px solid #3E1410;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #3E1410,0 2px 6px rgba(0,0,0,0.4);transition:all 0.15s;flex-shrink:0}
+.icon-btn:active{transform:translateY(2px);box-shadow:0 0 0 #3E1410}
+.throne-reels{position:absolute;left:8%;top:32%;width:84%;height:36%;display:flex;gap:1.5%;z-index:3;padding:1.2%;background:rgba(0,0,0,0.92);border-radius:8px;box-shadow:0 0 0 2px rgba(255,215,0,0.3),0 0 15px rgba(0,0,0,0.8) inset}
+.reel{flex:1;height:100%;background:linear-gradient(180deg,#FFF9E6 0%,#FFEED0 100%);border-radius:6px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;border:1.5px solid #8B6914;box-shadow:0 2px 4px rgba(0,0,0,0.3) inset,0 0 0 1px rgba(255,255,255,0.5) inset;transition:box-shadow 0.3s,background 0.3s;cursor:pointer}
+.reel img{width:100%;height:100%;object-fit:cover;object-position:center 22%;pointer-events:none}
+.reel.spinning img{animation:reel-bob 0.1s linear infinite}
+@keyframes reel-bob{0%{transform:translateY(-15%) scale(0.94)}50%{transform:translateY(0) scale(1)}100%{transform:translateY(15%) scale(0.94)}}
+.reel.spinning{background:linear-gradient(180deg,#FFF 0%,#FFF 40%,#FFF3D6 50%,#FFF 60%,#FFF 100%);background-size:100% 200%;animation:reel-lines 0.2s linear infinite}
+@keyframes reel-lines{0%{background-position:0 0}100%{background-position:0 200%}}
+.reel.win{animation:reel-win 0.45s ease infinite alternate}
+@keyframes reel-win{from{transform:scale(1);filter:brightness(1)}to{transform:scale(1.04);filter:brightness(1.45)}}
+.reel.win-calm{box-shadow:0 0 32px #4EC5E8,inset 0 0 30px rgba(78,197,232,0.7)}
+.reel.win-angry{box-shadow:0 0 32px #FF4742,inset 0 0 30px rgba(255,71,66,0.7)}
+.reel.win-happy{box-shadow:0 0 32px #FFD700,inset 0 0 30px rgba(255,215,0,0.8)}
+
+.throne-info{position:absolute;left:6%;top:78%;width:88%;height:11%;display:flex;gap:1.5%;z-index:3;align-items:center;padding:0.5%}
+.info-box{flex:1;background:linear-gradient(180deg,rgba(10,6,16,0.9) 0%,rgba(26,15,40,0.9) 100%);color:#4AFF8C;padding:4px 4px;border-radius:6px;text-align:center;border:1.5px solid #FFD700;box-shadow:0 0 4px rgba(0,0,0,0.5) inset,0 0 10px rgba(255,215,0,0.5);min-width:0;backdrop-filter:blur(2px);height:100%;display:flex;flex-direction:column;justify-content:center;gap:2px;position:relative;overflow:hidden}
+.info-box.has-bg{background:transparent!important;border:none!important;box-shadow:none!important;padding:0}
+.info-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;z-index:1}
+.info-box.has-bg .info-label{display:none}
+.info-box.has-bg .info-value{position:absolute;bottom:20%;left:0;right:0;z-index:2;font-size:clamp(16px,4.5vw,26px);color:#FFD700;text-shadow:0 0 6px #000,0 0 10px rgba(255,215,0,0.8),1px 1px 0 #000}
+.info-label{font-size:11px;color:#FFD700;opacity:1;font-weight:900;letter-spacing:2px;text-shadow:0 0 4px rgba(255,215,0,0.6)}
+.info-value{font-size:22px;font-weight:900;font-family:'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 8px currentColor;letter-spacing:1px;line-height:1}
+
+.throne-credit{position:absolute;bottom:1%;right:3%;z-index:4;color:rgba(62,20,16,0.7);font-size:9px;letter-spacing:1.5px;font-style:italic;font-weight:bold;text-shadow:0 1px 0 rgba(255,255,255,0.3);pointer-events:none}
+
+.imperial-text{position:absolute;z-index:4;font-family:'Noto Serif TC','PingFang TC',serif;font-weight:900;font-size:clamp(14px,4.5vw,20px);color:#FFE66D;text-shadow:2px 2px 0 #3E1410,-1px -1px 0 #3E1410,1px -1px 0 #3E1410,-1px 1px 0 #3E1410,0 0 8px rgba(255,215,0,0.8),0 0 16px rgba(139,0,0,0.6);letter-spacing:6px;pointer-events:none;text-align:center;line-height:1;display:flex;align-items:center;justify-content:center}
+.imperial-text.has-img{background:transparent;color:transparent;text-shadow:none;font-size:0;letter-spacing:0}
+.imperial-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
+
+.control-bar{width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:14px}
+.spin-btn{width:100%;padding:15px;background:linear-gradient(145deg,#FFD700 0%,#B8860B 50%,#8B6914 100%);color:#3E1410;border:3px solid #3E1410;border-radius:16px;font-size:19px;font-weight:900;cursor:pointer;letter-spacing:12px;box-shadow:0 5px 0 #3E1410,0 0 24px rgba(255,215,0,0.5),0 2px 0 rgba(255,255,255,0.4) inset,0 -3px 0 rgba(0,0,0,0.2) inset;transition:all 0.08s;text-shadow:1px 1px 0 rgba(255,255,255,0.4);position:relative;overflow:hidden}
+.spin-btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);animation:shine 2.5s infinite}
+.spin-btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #3E1410,0 -3px 0 rgba(0,0,0,0.2) inset}
+.spin-btn:disabled{opacity:0.55;cursor:not-allowed;background:linear-gradient(145deg,#999,#666)}
+.spin-btn:disabled::after{display:none}
+.back-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.back-link{font-size:12px;color:rgba(255,230,120,0.95);cursor:pointer;padding:7px 14px;background:rgba(0,0,0,0.35);border-radius:999px;border:1px solid rgba(255,215,0,0.4);backdrop-filter:blur(4px);transition:all 0.2s;letter-spacing:1px}
+.back-link:active{transform:scale(0.95);background:rgba(0,0,0,0.5)}
+
+.win-overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:600;pointer-events:none;overflow:hidden}
+.win-overlay.show{display:flex}
+.win-overlay-bg{position:absolute;inset:-20%}
+.win-overlay.calm .win-overlay-bg{background:radial-gradient(circle at center,rgba(138,221,238,0.65) 0%,rgba(58,155,185,0.45) 40%,rgba(20,60,90,0.85) 100%);animation:calm-pulse 2s ease-in-out infinite}
+@keyframes calm-pulse{0%,100%{opacity:1}50%{opacity:0.82}}
+.win-overlay.angry .win-overlay-bg{background:radial-gradient(circle at center,rgba(255,71,66,0.8) 0%,rgba(180,20,15,0.65) 40%,rgba(40,5,5,0.95) 100%);animation:angry-flicker 0.12s infinite alternate}
+@keyframes angry-flicker{from{filter:brightness(1)}to{filter:brightness(1.3)}}
+.win-overlay.happy .win-overlay-bg{background:conic-gradient(from 0deg at 50% 50%,#FFD700,#FF6B9D,#6C5CE7,#4ECDC4,#FFE66D,#FFD700);opacity:0.9;animation:happy-rotate 4s linear infinite}
+@keyframes happy-rotate{to{transform:rotate(360deg)}}
+.win-overlay-content{position:relative;z-index:2;text-align:center;padding:20px;max-width:90vw;animation:overlay-pop 0.6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes overlay-pop{0%{opacity:0;transform:scale(0.3) rotate(-10deg)}60%{transform:scale(1.1) rotate(2deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+.win-title{font-size:42px;font-weight:900;letter-spacing:4px;margin-bottom:14px;line-height:1.15;display:inline-block}
+.win-overlay.calm .win-title{color:#FFF;text-shadow:0 0 20px rgba(138,221,238,1),0 0 40px rgba(100,200,230,0.9),0 2px 4px rgba(0,0,0,0.5)}
+.win-overlay.angry .win-title{color:#FFD700;text-shadow:0 0 10px #FF4500,0 0 25px #FF0000,2px 2px 0 #000;animation:title-shake 0.1s infinite}
+@keyframes title-shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-3px,2px)}50%{transform:translate(3px,-2px)}75%{transform:translate(-2px,-3px)}}
+.win-overlay.happy .win-title{background:linear-gradient(90deg,#FFD700,#FF6B9D,#6C5CE7,#4ECDC4,#FFD700);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gold-shimmer 2s linear infinite;filter:drop-shadow(0 0 15px rgba(255,215,0,0.9))}
+@keyframes gold-shimmer{to{background-position:200% center}}
+.win-sub{font-size:17px;font-weight:bold;padding:10px 22px;border-radius:999px;display:inline-block;letter-spacing:2px;backdrop-filter:blur(6px);max-width:88vw}
+.win-overlay.calm .win-sub{background:rgba(255,255,255,0.25);color:#FFF;border:2px solid rgba(255,255,255,0.7)}
+.win-overlay.angry .win-sub{background:rgba(0,0,0,0.75);color:#FFD700;border:2px solid #FFD700;animation:sub-warn 0.6s infinite alternate}
+@keyframes sub-warn{from{box-shadow:0 0 4px #FFD700}to{box-shadow:0 0 20px #FFD700}}
+.win-overlay.happy .win-sub{background:rgba(255,255,255,0.95);color:#B87B00;border:3px solid #FFD700;box-shadow:0 0 26px rgba(255,215,0,0.8)}
+.win-amount{font-size:24px;font-weight:900;margin-top:16px;color:#FFD700;text-shadow:0 2px 8px rgba(0,0,0,0.7);font-family:'Courier New',monospace;letter-spacing:1px}
+.particles-container{position:fixed;inset:0;pointer-events:none;z-index:500;overflow:hidden}
+.particle{position:absolute;font-size:26px;animation:particle-fall 2.8s ease-out forwards}
+@keyframes particle-fall{0%{transform:translateY(-30px) rotate(0) scale(0.4);opacity:1}100%{transform:translateY(110vh) rotate(720deg) scale(1.1);opacity:0}}
+.particle.angry-burst{animation:angry-particle 1.8s ease-out forwards}
+@keyframes angry-particle{0%{transform:translate(0,0) scale(0.3);opacity:0}15%{opacity:1;transform:translate(var(--dx,0),var(--dy,0)) scale(1.5)}100%{transform:translate(calc(var(--dx,0) * 1.8),calc(var(--dy,0) * 1.8)) scale(0.4);opacity:0}}
+.particle.calm-float{animation:calm-float 3.5s ease-in-out forwards}
+@keyframes calm-float{0%{transform:translateY(-30px) translateX(0) rotate(0);opacity:0}15%{opacity:0.9}100%{transform:translateY(110vh) translateX(var(--drift,40px)) rotate(360deg);opacity:0}}
+.mixed-hint{position:fixed;top:42%;left:50%;transform:translate(-50%,-50%) scale(0);background:linear-gradient(145deg,rgba(50,20,10,0.9),rgba(30,10,5,0.95));color:#FFD700;font-size:15px;padding:10px 22px;border-radius:999px;z-index:400;pointer-events:none;backdrop-filter:blur(6px);border:2px solid rgba(255,215,0,0.6);letter-spacing:2px;box-shadow:0 0 20px rgba(255,215,0,0.3);font-weight:bold;max-width:88vw;text-align:center}
+.mixed-hint.show{animation:mixed-pop 2.2s ease}
+@keyframes mixed-pop{0%{transform:translate(-50%,-50%) scale(0);opacity:0}12%,85%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(0.9);opacity:0}}
+.modal-backdrop{position:fixed;inset:0;background:rgba(10,5,15,0.75);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px;overflow-y:auto;backdrop-filter:blur(6px)}
+.modal-backdrop.show{display:flex}
+.modal{background:linear-gradient(145deg,#FFF8F0,#FFF0E0);border-radius:24px;padding:22px;width:100%;max-width:390px;max-height:90vh;overflow-y:auto;box-shadow:0 0 0 3px #FFD700 inset,0 0 0 5px #3E1410 inset,0 20px 50px rgba(0,0,0,0.6)}
+.modal h3{margin-bottom:14px;color:#3E1410;font-size:18px;font-weight:900;letter-spacing:2px}
+.setting-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #F0E4D4}
+.setting-row:last-of-type{border:none}
+.setting-label{flex:1;min-width:0}
+.setting-label-title{font-weight:bold;font-size:14px;color:#3E1410;display:flex;align-items:center;gap:6px}
+.setting-label-title img{width:24px;height:24px;border-radius:6px;object-fit:contain;background:#FFF8F0;padding:2px}
+.setting-label-hint{font-size:11px;color:#8B4513;margin-top:2px}
+.setting-input-group{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.setting-input-group input{width:52px;padding:6px;border:2px solid #B8860B;border-radius:8px;text-align:center;font-size:14px;font-weight:bold;font-family:inherit;background:#FFFAF5}
+.setting-input-group input:focus{outline:none;border-color:#E74C3C}
+.setting-input-group span{color:#999;font-size:12px}
+.prob-panel{background:linear-gradient(145deg,#FFF4D8,#FFE8B0);border-radius:14px;padding:12px 14px;font-size:12px;margin-top:12px;color:#3E1410;line-height:1.8;border:1px solid rgba(184,134,11,0.4)}
+.modal-actions{display:flex;gap:8px;margin-top:16px}
+.modal-actions button{flex:1;padding:12px;border:none;border-radius:12px;font-weight:bold;cursor:pointer;font-size:14px;font-family:inherit;transition:transform 0.1s;letter-spacing:2px}
+.btn-save{background:linear-gradient(145deg,#FFD700,#B8860B);color:#3E1410}
+.btn-cancel{background:linear-gradient(145deg,#EEE,#DDD);color:#333}
+.btn-reset{background:linear-gradient(145deg,#E74C3C,#8B0000);color:white}
+.modal-actions button:active{transform:scale(0.96)}
+.reset-modal{text-align:center}
+.reset-modal h3{font-size:22px;margin-bottom:6px}
+.reset-modal p{color:#8B4513;margin-bottom:16px;font-size:14px}
+.export-info{background:linear-gradient(145deg,#FFF4D8,#FFE8B0);padding:14px;border-radius:12px;font-size:13px;line-height:1.7;color:#3E1410;border:1px solid #B8860B;margin-bottom:14px}
+.export-info ol{padding-left:20px;margin-top:6px}
+.export-info code{background:#FFE8C8;padding:1px 6px;border-radius:4px;font-size:12px;font-family:'Courier New',monospace}
+.tuner{position:fixed;bottom:10px;left:10px;background:rgba(0,0,0,0.85);color:#FFD700;padding:10px;border-radius:10px;z-index:9999;font-size:11px;font-family:monospace;display:none;max-width:260px}
+.tuner.show{display:block}
+.tuner-row{display:flex;align-items:center;gap:6px;margin:3px 0}
+.tuner-row label{width:40px;color:#FFE66D}
+.tuner-row input{flex:1;accent-color:#FFD700}
+.tuner-row span{min-width:32px;text-align:right}
+</style>
+</head>
+<body>
+
+<div id="ambient-stars"></div>
+
+<div id="setup-screen" class="screen">
+  <div class="setup-card">
+    <div class="setup-title">🎰 水豚王聖意占卜</div>
+    <div class="setup-subtitle">上奏前必卜 · 探知今日龍意</div>
+    <div class="setup-divider"></div>
+    
+    <div class="section-label">❶ 御 容 · 必 填</div>
+    <div class="upload-grid">
+      <label class="upload-slot" id="slot-0">
+        <div class="upload-preview"><span id="slot-placeholder-0">🧘</span><img id="slot-preview-0" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">平靜<span class="badge b1">2×</span></div><div class="upload-label-hint">心如止水 · 速速上奏</div></div>
+        <input type="file" accept="image/*" onchange="handleUpload(0,this)">
+      </label>
+      <label class="upload-slot" id="slot-1">
+        <div class="upload-preview"><span id="slot-placeholder-1">😤</span><img id="slot-preview-1" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">憤怒<span class="badge b2">5×</span></div><div class="upload-label-hint">老衲將親自指導</div></div>
+        <input type="file" accept="image/*" onchange="handleUpload(1,this)">
+      </label>
+      <label class="upload-slot" id="slot-2">
+        <div class="upload-preview"><span id="slot-placeholder-2">🎉</span><img id="slot-preview-2" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">歡樂<span class="badge b3">20×</span></div><div class="upload-label-hint">龍心大悅 · 所求皆准</div></div>
+        <input type="file" accept="image/*" onchange="handleUpload(2,this)">
+      </label>
+    </div>
+    
+    <div class="section-label">❷ 機 台 背 景</div>
+    <div class="upload-grid">
+      <label class="upload-slot" id="slot-bg">
+        <div class="upload-preview"><span id="bg-placeholder">🏛️</span><img id="bg-preview" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">龍椅圖<span class="badge b-reco">建議</span></div><div class="upload-label-hint" id="bg-hint">Gemini 生成的龍椅拉霸圖</div></div>
+        <input type="file" accept="image/*" onchange="handleBgUpload(this)">
+      </label>
+    </div>
+    
+    <div class="section-label">❸ 聖 意 占 卜 橫 匾 · 選 填</div>
+    <div class="upload-grid">
+      <label class="upload-slot" id="slot-imp-l">
+        <div class="upload-preview"><span id="imp-l-placeholder">📜</span><img id="imp-l-preview" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">聖意占卜橫匾</div><div class="upload-label-hint">橫式匾額 · 金邊紅底 · 置於龍頭下方</div></div>
+        <input type="file" accept="image/*" onchange="handleImperialUpload('left',this)">
+      </label>
+    </div>
+    
+    <div class="section-label">❹ 資 訊 牌 位 · 選 填</div>
+    <div class="upload-grid horiz">
+      <label class="upload-slot" id="slot-info-0">
+        <div class="upload-preview"><span id="info-0-placeholder">🎴</span><img id="info-0-preview" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">運勢</div><div class="upload-label-hint">左牌位</div></div>
+        <input type="file" accept="image/*" onchange="handleInfoBgUpload(0,this)">
+      </label>
+      <label class="upload-slot" id="slot-info-1">
+        <div class="upload-preview"><span id="info-1-placeholder">🎴</span><img id="info-1-preview" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">每卦</div><div class="upload-label-hint">中牌位</div></div>
+        <input type="file" accept="image/*" onchange="handleInfoBgUpload(1,this)">
+      </label>
+      <label class="upload-slot" id="slot-info-2">
+        <div class="upload-preview"><span id="info-2-placeholder">🎴</span><img id="info-2-preview" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">賞賜</div><div class="upload-label-hint">右牌位</div></div>
+        <input type="file" accept="image/*" onchange="handleInfoBgUpload(2,this)">
+      </label>
+    </div>
+    
+    <div class="section-label">❺ 占 卜 按 鈕 · 選 填</div>
+    <div class="upload-grid">
+      <label class="upload-slot" id="slot-zb">
+        <div class="upload-preview"><span id="zb-placeholder">🎯</span><img id="zb-preview" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">占卜按鈕</div><div class="upload-label-hint">遊戲內主按鈕 · 跟匾額同風格</div></div>
+        <input type="file" accept="image/*" onchange="handleButtonUpload('zb',this)">
+      </label>
+    </div>
+    
+    <div class="section-label">❻ 背 景 音 樂 · 選 填</div>
+    <div class="upload-grid">
+      <label class="upload-slot" id="music-slot">
+        <div class="upload-preview"><span id="music-placeholder">🎵</span></div>
+        <div class="upload-label"><div class="upload-label-title">BGM<span class="badge b-opt">選填</span></div><div class="upload-label-hint" id="music-hint">MP3 / M4A / MP4</div></div>
+        <input type="file" accept="audio/*,.mp3,.m4a,.mp4,.wav,.ogg,video/mp4" onchange="handleMusicUpload(this)">
+      </label>
+    </div>
+    
+    <button class="start-btn" id="start-btn" onclick="startGame()" disabled><img class="btn-img" id="qg-btn-img" style="display:none" alt=""><span id="qg-btn-text">起 卦</span></button>
+  </div>
+</div>
+
+<div id="game-screen" class="screen" style="display:none">
+  <div class="throne-machine" id="throne-machine">
+    <img class="throne-bg" id="throne-bg-img" alt="" style="display:none">
+    <div class="throne-fallback" id="throne-fallback">未載入背景圖<br>遊戲仍可正常進行</div>
+    <div class="corner-title"><span>👑</span>水豚王</div>
+    <div class="corner-controls">
+      <button class="icon-btn" onclick="toggleSound()" id="sound-btn">🔊</button>
+      <button class="icon-btn" onclick="openSettings()">⚙</button>
+    </div>
+    <div class="imperial-text" id="imperial-left">聖意占卜<img class="imperial-img" id="imp-img-left" style="display:none" alt=""></div>
+    <div class="throne-reels" id="throne-reels">
+      <div class="reel" id="reel-0" onclick="spin()"><img id="reel-img-0"></div>
+      <div class="reel" id="reel-1" onclick="spin()"><img id="reel-img-1"></div>
+      <div class="reel" id="reel-2" onclick="spin()"><img id="reel-img-2"></div>
+    </div>
+    <div class="throne-info" id="throne-info">
+      <div class="info-box" id="info-box-0"><img class="info-bg-img" id="info-bg-0" style="display:none" alt=""><div class="info-label">運勢</div><div class="info-value" id="balance-display">1000</div></div>
+      <div class="info-box" id="info-box-1"><img class="info-bg-img" id="info-bg-1" style="display:none" alt=""><div class="info-label">每卦</div><div class="info-value" id="bet-display">10</div></div>
+      <div class="info-box" id="info-box-2"><img class="info-bg-img" id="info-bg-2" style="display:none" alt=""><div class="info-label">賞賜</div><div class="info-value" id="lastwin-display">0</div></div>
+    </div>
+    <div class="throne-credit">by William</div>
+  </div>
+  <div class="control-bar">
+    <button class="spin-btn" id="spin-btn" onclick="spin()"><img class="btn-img" id="zb-btn-img" style="display:none" alt=""><span id="zb-btn-text">占　卜</span></button>
+    <div class="back-row">
+      <div class="back-link" onclick="backToSetup()">↩ 換御容</div>
+      <div class="back-link" onclick="openExport()">📤 傳旨下去</div>
+      <div class="back-link" onclick="toggleTuner()">📐 校準</div>
+    </div>
+  </div>
+</div>
+
+<div class="tuner" id="tuner">
+  <div style="margin-bottom:6px;color:#FFE66D;font-weight:bold">📐 校準（輪軸）</div>
+  <div class="tuner-row"><label>左</label><input type="range" min="0" max="50" step="0.5" id="tune-left" oninput="applyTune()"><span id="tune-left-v">8</span>%</div>
+  <div class="tuner-row"><label>上</label><input type="range" min="0" max="70" step="0.5" id="tune-top" oninput="applyTune()"><span id="tune-top-v">32</span>%</div>
+  <div class="tuner-row"><label>寬</label><input type="range" min="20" max="100" step="0.5" id="tune-w" oninput="applyTune()"><span id="tune-w-v">84</span>%</div>
+  <div class="tuner-row"><label>高</label><input type="range" min="10" max="60" step="0.5" id="tune-h" oninput="applyTune()"><span id="tune-h-v">36</span>%</div>
+  <div style="border-top:1px solid #FFD700;margin:6px 0;padding-top:6px;color:#FFE66D;font-size:10px">資訊列</div>
+  <div class="tuner-row"><label>左</label><input type="range" min="0" max="40" step="0.5" id="tune-ileft" oninput="applyTune()"><span id="tune-ileft-v">6</span>%</div>
+  <div class="tuner-row"><label>上</label><input type="range" min="50" max="95" step="0.5" id="tune-itop" oninput="applyTune()"><span id="tune-itop-v">78</span>%</div>
+  <div class="tuner-row"><label>寬</label><input type="range" min="30" max="100" step="0.5" id="tune-iw" oninput="applyTune()"><span id="tune-iw-v">88</span>%</div>
+  <div class="tuner-row"><label>高</label><input type="range" min="5" max="45" step="0.5" id="tune-ih" oninput="applyTune()"><span id="tune-ih-v">11</span>%</div>
+  <div class="tuner-row"><label>字Y</label><input type="range" min="0" max="80" step="1" id="tune-nb" oninput="applyTune()"><span id="tune-nb-v">20</span>%</div>
+  <div class="tuner-row"><label>字級</label><input type="range" min="10" max="40" step="1" id="tune-nfs" oninput="applyTune()"><span id="tune-nfs-v">20</span>px</div>
+  <div style="border-top:1px solid #FFD700;margin:6px 0;padding-top:6px;color:#FFE66D;font-size:10px">聖意占卜橫匾</div>
+  <div class="tuner-row"><label>X</label><input type="range" min="0" max="50" step="0.5" value="5" id="tune-sl" oninput="applyTune()"><span id="tune-sl-v">5</span>%</div>
+  <div class="tuner-row"><label>Y</label><input type="range" min="0" max="70" step="0.5" value="20" id="tune-st" oninput="applyTune()"><span id="tune-st-v">20</span>%</div>
+  <div class="tuner-row"><label>寬</label><input type="range" min="10" max="100" step="0.5" value="90" id="tune-sw" oninput="applyTune()"><span id="tune-sw-v">90</span>%</div>
+  <div class="tuner-row"><label>高</label><input type="range" min="3" max="50" step="0.5" value="8" id="tune-sh" oninput="applyTune()"><span id="tune-sh-v">8</span>%</div>
+  <div style="font-size:10px;color:#FFE66D;margin-top:6px;word-break:break-all" id="tune-code">defaults loaded</div>
+</div>
+
+<div class="win-overlay" id="win-overlay">
+  <div class="win-overlay-bg"></div>
+  <div class="win-overlay-content">
+    <div class="win-title" id="win-title"></div><br>
+    <div class="win-sub" id="win-sub"></div>
+    <div class="win-amount" id="win-amount"></div>
+  </div>
+</div>
+
+<div class="particles-container" id="particles"></div>
+<div class="mixed-hint" id="mixed-hint"></div>
+
+<div class="modal-backdrop" id="settings-modal">
+  <div class="modal">
+    <h3>⚙ 占卜設定</h3>
+    <div class="setting-row"><div class="setting-label"><div class="setting-label-title">起始運勢點</div><div class="setting-label-hint">重置時用的點數</div></div><div class="setting-input-group"><input type="number" id="set-initial" min="100" step="100"></div></div>
+    <div class="setting-row"><div class="setting-label"><div class="setting-label-title">每卦點數</div><div class="setting-label-hint">每次占卜消耗</div></div><div class="setting-input-group"><input type="number" id="set-bet" min="1"></div></div>
+    <h3 style="margin-top:10px;font-size:15px">符號權重 × 三同倍率</h3>
+    <div id="symbol-settings"></div>
+    <div class="prob-panel" id="prob-panel"></div>
+    <div class="modal-actions"><button class="btn-reset" onclick="resetBalance()">重置</button><button class="btn-cancel" onclick="closeSettings()">取消</button><button class="btn-save" onclick="saveSettings()">儲存</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="gameover-modal">
+  <div class="modal reset-modal"><div style="font-size:52px;margin-bottom:6px">💸</div><h3>氣數已盡</h3><p>今日運勢已用罄，改日再來占卜？</p><div class="modal-actions"><button class="btn-save" onclick="restart()">重新起卦</button></div></div>
+</div>
+
+<div class="modal-backdrop" id="export-modal">
+  <div class="modal">
+    <h3>📤 傳旨下去</h3>
+    <div class="export-info">下一個<b>已將御容、背景、書法、牌位、音樂全部烤進 HTML</b> 的獨立檔。<ol><li>直接 email / LINE / AirDrop 給同仁</li><li>或拖到 <code>tiiny.host</code>、<code>netlify.com/drop</code> 得到分享連結</li></ol></div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeExport()">取消</button><button class="btn-save" onclick="doExport()">下載</button></div>
+  </div>
+</div>
+
+<script>
+const state={
+  symbols:[null,null,null],bgDataUrl:null,
+  imperialUrls:{left:null,right:null},
+  infoBgUrls:[null,null,null],
+  musicDataUrl:null,musicAudio:null,musicVolume:0.5,
+  tune:{left:2.5,top:34,w:92,h:34.5,ileft:0,itop:78,iw:98.5,ih:20,sl:0,sr:80,st:21.5,sw:100,sh:9,nb:33,nfs:31},
+  names:['平靜','憤怒','歡樂'],
+  quotes:{
+    calm:[{title:'老衲心如止水',sub:'有事速速奏來，無妨 🙏',emoji:['💧','🪷','☁️','✨','🕊️','📜']},{title:'朕今日甚安',sub:'有事啟奏，無事退朝',emoji:['💧','🪷','☁️','✨','🍵','📜']},{title:'吾心靜如秋水',sub:'有話直說，老衲聽著',emoji:['🕊️','☁️','✨','🪷','💧','📋']},{title:'老衲入禪中',sub:'汝之事...准了',emoji:['🧘','🪷','☁️','💧','✨','☕']}],
+    angry:[{title:'讓老衲指導指導',sub:'汝且坐下，本王親自點撥 ⚠️',emoji:['🔥','⚡','💢','📋','👊','📌']},{title:'朕甚為不悅！',sub:'汝這方案...需從頭重做',emoji:['🔥','⚡','💢','🌋','📋','👊']},{title:'汝可知錯否？！',sub:'過來！老衲必好好教教汝',emoji:['🔥','⚡','💢','👊','📌','🗯️']},{title:'這都不會？！',sub:'老衲已言過三遍矣...',emoji:['🔥','💢','⚡','📋','🗯️','🌋']},{title:'豈有此理！',sub:'本王今日倒要聽汝如何解釋',emoji:['🔥','⚡','💢','🌋','👊','📌']}],
+    happy:[{title:'老衲龍心大悅！',sub:'所求之事，盡管奏來 ✨',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','📈']},{title:'哈哈哈！甚合吾意',sub:'今日汝所求，皆可准',emoji:['⭐','🎵','💎','🎊','🌟','💰','🏆','📈']},{title:'大善！大善！',sub:'此時不請，更待何時？',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','🏆']},{title:'妙哉！妙哉！',sub:'此事老衲全力支持！',emoji:['⭐','💎','🎊','🌟','💰','🎁','📈','🏆']},{title:'朕心花怒放',sub:'汝且趁機多要些預算 😏',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','📈']}]
+  },
+  mixedHints:['老衲今日心情嘛…難說','此事容老衲三思','汝先退下，改日再議','莫催莫急，老衲正想著','吾意未定，再占一卦？','此事複雜，老衲需再斟酌','嗯...汝先放著，老衲看看','龍意難測，且觀且行'],
+  balance:1000,initialBalance:1000,bet:10,tripleProbs:[10,5,3],weights:[5,3,2],multipliers:[2,5,20],
+  lastWin:0,spinning:false,audioCtx:null,masterGain:null,soundOn:true
+};
+
+function readAsDataURL(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=rej;r.readAsDataURL(f)})}
+
+function handleUpload(i,input){
+  const f=input.files[0];if(!f)return;
+  readAsDataURL(f).then(url=>{
+    state.symbols[i]=url;
+    const img=document.getElementById('slot-preview-'+i);
+    const ph=document.getElementById('slot-placeholder-'+i);
+    img.src=url;img.style.display='block';ph.style.display='none';
+    document.getElementById('slot-'+i).classList.add('filled');
+    checkReady();
+  });
+}
+function handleBgUpload(input){
+  const f=input.files[0];if(!f)return;
+  readAsDataURL(f).then(url=>{
+    state.bgDataUrl=url;
+    const img=document.getElementById('bg-preview');
+    const ph=document.getElementById('bg-placeholder');
+    img.src=url;img.style.display='block';ph.style.display='none';
+    document.getElementById('slot-bg').classList.add('filled');
+    document.getElementById('bg-hint').textContent='已載入：'+f.name+' ('+(f.size/1024/1024).toFixed(1)+' MB)';
+  });
+}
+function handleImperialUpload(side,input){
+  const f=input.files[0];if(!f)return;
+  readAsDataURL(f).then(url=>{
+    state.imperialUrls[side]=url;
+    const img=document.getElementById('imp-'+side[0]+'-preview');
+    const ph=document.getElementById('imp-'+side[0]+'-placeholder');
+    img.src=url;img.style.display='block';ph.style.display='none';
+    document.getElementById('slot-imp-'+side[0]).classList.add('filled');
+  });
+}
+function handleInfoBgUpload(idx,input){
+  const f=input.files[0];if(!f)return;
+  readAsDataURL(f).then(url=>{
+    state.infoBgUrls[idx]=url;
+    const img=document.getElementById('info-'+idx+'-preview');
+    const ph=document.getElementById('info-'+idx+'-placeholder');
+    img.src=url;img.style.display='block';ph.style.display='none';
+    document.getElementById('slot-info-'+idx).classList.add('filled');
+  });
+}
+function handleButtonUpload(key,input){
+  const f=input.files[0];if(!f)return;
+  if(!state.buttonUrls)state.buttonUrls={};
+  readAsDataURL(f).then(url=>{
+    state.buttonUrls[key]=url;
+    const preview=document.getElementById(key+'-preview');
+    const ph=document.getElementById(key+'-placeholder');
+    if(preview){preview.src=url;preview.style.display='block'}
+    if(ph)ph.style.display='none';
+    document.getElementById('slot-'+key).classList.add('filled');
+    const btnMap={qg:['qg-btn-img','start-btn'],zb:['zb-btn-img','spin-btn']};
+    const m=btnMap[key];
+    if(m){
+      const btnImg=document.getElementById(m[0]);
+      const btn=document.getElementById(m[1]);
+      if(btnImg){btnImg.src=url;btnImg.style.display='block'}
+      if(btn)btn.classList.add('has-img');
+    }
+  });
+}
+function handleMusicUpload(input){
+  const f=input.files[0];if(!f)return;
+  if(state.musicAudio){try{state.musicAudio.pause();state.musicAudio.remove()}catch(e){}}
+  const v=document.createElement('video');
+  v.loop=true;v.volume=state.musicVolume;v.style.display='none';
+  v.playsInline=true;v.preload='auto';
+  v.src=URL.createObjectURL(f);
+  document.body.appendChild(v);
+  state.musicAudio=v;
+  document.getElementById('music-slot').classList.add('filled');
+  document.getElementById('music-placeholder').textContent='⋯';
+  document.getElementById('music-hint').textContent='載入中：'+f.name;
+  v.addEventListener('error',()=>{document.getElementById('music-placeholder').textContent='✗';document.getElementById('music-hint').textContent='⚠ 格式不支援 · 建議轉 MP3'});
+  v.addEventListener('canplay',()=>{document.getElementById('music-placeholder').textContent='✓';document.getElementById('music-hint').textContent='已載入：'+f.name+' ('+(f.size/1024/1024).toFixed(1)+' MB)'});
+  readAsDataURL(f).then(url=>{state.musicDataUrl=url});
+}
+
+function checkReady(){document.getElementById('start-btn').disabled=!state.symbols.every(s=>s!==null)}
+
+function applyDecorations(){
+  // throne bg
+  if(state.bgDataUrl){
+    const bg=document.getElementById('throne-bg-img');
+    bg.src=state.bgDataUrl;bg.style.display='block';
+    document.getElementById('throne-fallback').style.display='none';
+  }
+  // imperial banner (single horizontal)
+  ['left'].forEach(side=>{
+    const container=document.getElementById('imperial-'+side);
+    const img=document.getElementById('imp-img-'+side);
+    if(!container||!img)return;
+    if(state.imperialUrls[side]){
+      img.src=state.imperialUrls[side];img.style.display='block';
+      container.classList.add('has-img');
+    }else{
+      img.style.display='none';container.classList.remove('has-img');
+    }
+  });
+  // info backgrounds
+  for(let i=0;i<3;i++){
+    const box=document.getElementById('info-box-'+i);
+    const img=document.getElementById('info-bg-'+i);
+    if(state.infoBgUrls[i]){
+      img.src=state.infoBgUrls[i];img.style.display='block';
+      box.classList.add('has-bg');
+    }else{
+      img.style.display='none';box.classList.remove('has-bg');
+    }
+  }
+}
+
+function startGame(){
+  document.getElementById('setup-screen').style.display='none';
+  document.getElementById('game-screen').style.display='flex';
+  state.symbols.forEach((s,i)=>document.getElementById('reel-img-'+i).src=s);
+  applyDecorations();
+  const t=state.tune;
+  ['left','top','w','h','ileft','itop','iw','ih','sl','sr','st','sw','sh'].forEach(k=>{
+    const el=document.getElementById('tune-'+k);
+    if(el){el.value=t[k];document.getElementById('tune-'+k+'-v').textContent=t[k]}
+  });
+  applyTune();
+  renderInfo();initAudio();playMusic();
+}
+function backToSetup(){
+  document.getElementById('setup-screen').style.display='flex';
+  document.getElementById('game-screen').style.display='none';
+  pauseMusic();
+}
+
+function toggleTuner(){document.getElementById('tuner').classList.toggle('show')}
+function applyTune(){
+  ['left','top','w','h','ileft','itop','iw','ih','sl','sr','st','sw','sh','nb','nfs'].forEach(k=>{
+    const el=document.getElementById('tune-'+k);
+    if(el){state.tune[k]=parseFloat(el.value);document.getElementById('tune-'+k+'-v').textContent=el.value}
+  });
+  const t=state.tune;
+  const reels=document.getElementById('throne-reels');
+  reels.style.left=t.left+'%';reels.style.top=t.top+'%';
+  reels.style.width=t.w+'%';reels.style.height=t.h+'%';
+  const info=document.getElementById('throne-info');
+  info.style.left=t.ileft+'%';info.style.top=t.itop+'%';
+  info.style.width=t.iw+'%';info.style.height=t.ih+'%';
+  const il=document.getElementById('imperial-left');
+  const ir=document.getElementById('imperial-right');
+  if(il){il.style.left=t.sl+'%';il.style.top=t.st+'%';il.style.width=t.sw+'%';il.style.height=t.sh+'%'}
+  if(ir){ir.style.left=t.sr+'%';ir.style.top=t.st+'%';ir.style.width=t.sw+'%';ir.style.height=t.sh+'%'}
+  // apply number position + size to info-values with bg
+  for(let i=0;i<3;i++){
+    const box=document.getElementById('info-box-'+i);
+    const val=box?box.querySelector('.info-value'):null;
+    if(val&&box.classList.contains('has-bg')){
+      val.style.bottom=t.nb+'%';
+      val.style.fontSize=t.nfs+'px';
+    }else if(val){
+      val.style.bottom='';val.style.fontSize='';
+    }
+  }
+  document.getElementById('tune-code').textContent=`R:L${t.left} T${t.top} W${t.w} H${t.h}|I:L${t.ileft} T${t.itop} W${t.iw} H${t.ih}|S:L${t.sl} T${t.st} W${t.sw} H${t.sh}|N:Y${t.nb} ${t.nfs}px`;
+}
+
+function startAmbientStars(){
+  const c=document.getElementById('ambient-stars');
+  const es=['✨','⭐','💫','🌟','📊','📈','💼','📋','👑','💎','📜','☕'];
+  setInterval(()=>{
+    if(document.hidden)return;
+    const s=document.createElement('div');s.className='ambient-star';
+    s.textContent=es[Math.floor(Math.random()*es.length)];
+    s.style.left=(Math.random()*100)+'%';s.style.bottom='-20px';
+    s.style.animationDuration=(7+Math.random()*6)+'s';
+    c.appendChild(s);setTimeout(()=>s.remove(),13500);
+  },650);
+}
+startAmbientStars();
+
+function initAudio(){
+  if(state.audioCtx)return;
+  try{
+    const C=window.AudioContext||window.webkitAudioContext;
+    state.audioCtx=new C();state.masterGain=state.audioCtx.createGain();
+    state.masterGain.gain.value=state.soundOn?0.3:0;
+    state.masterGain.connect(state.audioCtx.destination);
+  }catch(e){}
+}
+function toggleSound(){
+  state.soundOn=!state.soundOn;
+  document.getElementById('sound-btn').textContent=state.soundOn?'🔊':'🔇';
+  if(state.masterGain)state.masterGain.gain.linearRampToValueAtTime(state.soundOn?0.3:0,state.audioCtx.currentTime+0.2);
+  if(state.musicAudio)state.musicAudio.muted=!state.soundOn;
+}
+function beep(freq,dur,type='sine',vol=0.3){
+  if(!state.audioCtx)return;
+  if(state.audioCtx.state==='suspended')state.audioCtx.resume();
+  const o=state.audioCtx.createOscillator();const g=state.audioCtx.createGain();
+  o.type=type;o.frequency.value=freq;g.gain.value=vol;
+  g.gain.exponentialRampToValueAtTime(0.001,state.audioCtx.currentTime+dur);
+  o.connect(g);g.connect(state.masterGain);
+  o.start();o.stop(state.audioCtx.currentTime+dur);
+}
+function playMusic(){
+  if(!state.musicAudio)return;
+  state.musicAudio.volume=state.musicVolume;
+  const p=state.musicAudio.play();
+  if(p&&p.catch)p.catch(()=>{
+    const retry=()=>{state.musicAudio.play().then(()=>{['click','touchend','keydown'].forEach(ev=>document.body.removeEventListener(ev,retry))}).catch(()=>{})};
+    ['click','touchend','keydown'].forEach(ev=>document.body.addEventListener(ev,retry));
+  });
+}
+function pauseMusic(){if(state.musicAudio){try{state.musicAudio.pause()}catch(e){}}}
+function fadeAudioVolume(audio,target,duration){
+  if(!audio)return;const start=audio.volume;const steps=15;const stepDur=duration/steps;const delta=(target-start)/steps;let i=0;
+  const iv=setInterval(()=>{i++;try{audio.volume=Math.max(0,Math.min(1,start+delta*i))}catch(e){}if(i>=steps)clearInterval(iv)},stepDur);
+}
+function duckMusic(){if(state.musicAudio)fadeAudioVolume(state.musicAudio,0.12,200)}
+function restoreMusic(){if(state.musicAudio)fadeAudioVolume(state.musicAudio,state.musicVolume,500)}
+
+function playLever(){beep(160,0.1,'square',0.25);setTimeout(()=>beep(90,0.2,'sawtooth',0.22),80)}
+function playTick(){beep(900,0.025,'square',0.08)}
+function playStop(){beep(240,0.1,'square',0.3);beep(180,0.1,'square',0.2)}
+function playLose(){[196,185,175,165].forEach((n,i)=>setTimeout(()=>beep(n,0.2,'sawtooth',0.2),i*120));setTimeout(()=>beep(147,0.5,'sawtooth',0.18),500)}
+function playCalmWin(){[784,988,1175,1568,1865,2093,1865,1568,1175,988,1568,2093,2349].forEach((n,i)=>setTimeout(()=>beep(n,0.7,'triangle',0.3),i*120))}
+function playAngryWin(){[98,131,156].forEach(n=>beep(n,1.0,'sawtooth',0.22));setTimeout(()=>{[440,415,392,370,349,330,311,294,277].forEach((n,i)=>setTimeout(()=>beep(n,0.14,'square',0.22),i*90))},200);setTimeout(()=>{beep(73,0.9,'sawtooth',0.38);beep(147,0.7,'triangle',0.3);beep(55,1.2,'sawtooth',0.3)},1200)}
+function playCoin(){beep(1568,0.04,'square',0.2);setTimeout(()=>beep(2093,0.08,'square',0.2),40)}
+function playHappyWin(){for(let i=0;i<14;i++)setTimeout(playCoin,i*55);setTimeout(()=>{[523,659,784,1047,1319].forEach((n,i)=>setTimeout(()=>beep(n,0.28,'triangle',0.38),i*95));setTimeout(()=>{[1047,1175,1319,1047,1319,1568,1319,1975,2093,2349].forEach((n,i)=>setTimeout(()=>beep(n,0.24,'square',0.32),i*110))},500);setTimeout(()=>[523,659,784,1047,1319].forEach(n=>beep(n,1.5,'triangle',0.32)),2000)},900)}
+
+function renderInfo(){
+  document.getElementById('balance-display').textContent=state.balance;
+  document.getElementById('bet-display').textContent=state.bet;
+  document.getElementById('lastwin-display').textContent=state.lastWin;
+}
+function pickWeighted(){
+  const total=state.weights.reduce((a,b)=>a+b,0);
+  let r=Math.random()*total;
+  for(let i=0;i<state.weights.length;i++){r-=state.weights[i];if(r<=0)return i}
+  return 0;
+}
+function spin(){
+  if(state.spinning)return;
+  if(state.balance<state.bet){document.getElementById('gameover-modal').classList.add('show');return}
+  initAudio();
+  if(state.musicAudio&&state.musicAudio.paused)playMusic();
+  state.spinning=true;state.balance-=state.bet;renderInfo();
+  document.getElementById('spin-btn').disabled=true;
+  document.querySelectorAll('.reel').forEach(r=>r.classList.remove('win','win-calm','win-angry','win-happy'));
+  playLever();duckMusic();
+  const r=Math.random()*100;let cum=0,forceT=-1;
+  for(let i=0;i<3;i++){cum+=state.tripleProbs[i];if(r<cum){forceT=i;break}}
+  let finals;
+  if(forceT>=0){finals=[forceT,forceT,forceT]}
+  else{do{finals=[Math.floor(Math.random()*3),Math.floor(Math.random()*3),Math.floor(Math.random()*3)]}while(finals[0]===finals[1]&&finals[1]===finals[2])}
+  document.querySelectorAll('.reel').forEach(r=>r.classList.add('spinning'));
+  const tickInt=setInterval(playTick,90);
+  const flickers=[0,1,2].map(i=>setInterval(()=>{document.getElementById('reel-img-'+i).src=state.symbols[Math.floor(Math.random()*3)]},70));
+  [1200,1700,2300].forEach((t,i)=>{
+    setTimeout(()=>{
+      clearInterval(flickers[i]);
+      document.getElementById('reel-img-'+i).src=state.symbols[finals[i]];
+      document.getElementById('reel-'+i).classList.remove('spinning');
+      playStop();
+      if(i===2){clearInterval(tickInt);setTimeout(()=>finishSpin(finals),320)}
+    },t);
+  });
+}
+function finishSpin(finals){
+  const [a,b,c]=finals;let win=0;let restoreDelay=500;
+  if(a===b&&b===c){
+    const mult=state.multipliers[a];win=state.bet*mult;
+    const themeKey=['calm','angry','happy'][a];
+    document.querySelectorAll('.reel').forEach(r=>{r.classList.add('win','win-'+themeKey)});
+    showTripleWin(a,win,mult);
+    if(themeKey==='calm'){playCalmWin();restoreDelay=2800}
+    else if(themeKey==='angry'){playAngryWin();restoreDelay=3200}
+    else{playHappyWin();restoreDelay=4500}
+  }else{playLose();showMixedHint()}
+  setTimeout(restoreMusic,restoreDelay);
+  state.balance+=win;state.lastWin=win;renderInfo();
+  state.spinning=false;document.getElementById('spin-btn').disabled=false;
+  if(state.balance<state.bet){setTimeout(()=>document.getElementById('gameover-modal').classList.add('show'),win>0?4500:1200)}
+}
+function showTripleWin(symIdx,amount,mult){
+  const themeKey=['calm','angry','happy'][symIdx];
+  const variants=state.quotes[themeKey];
+  const q=variants[Math.floor(Math.random()*variants.length)];
+  const overlay=document.getElementById('win-overlay');
+  overlay.className='win-overlay show '+themeKey;
+  document.getElementById('win-title').textContent=q.title;
+  document.getElementById('win-sub').textContent=q.sub;
+  document.getElementById('win-amount').textContent='+ '+amount+' 運勢點 ('+mult+'×)';
+  spawnThemedParticles(themeKey,q.emoji);
+  const dur=themeKey==='happy'?4200:(themeKey==='angry'?3000:2600);
+  setTimeout(()=>overlay.classList.remove('show'),dur);
+}
+function spawnThemedParticles(themeKey,emojiSet){
+  const container=document.getElementById('particles');
+  const count=themeKey==='happy'?95:(themeKey==='angry'?60:55);
+  if(themeKey==='angry'){
+    for(let i=0;i<count;i++){
+      const p=document.createElement('div');p.className='particle angry-burst';
+      p.textContent=emojiSet[Math.floor(Math.random()*emojiSet.length)];
+      p.style.left='50%';p.style.top='50%';
+      const ang=(Math.PI*2*i)/count+Math.random()*0.3;
+      const dist=120+Math.random()*280;
+      p.style.setProperty('--dx',Math.cos(ang)*dist+'px');
+      p.style.setProperty('--dy',Math.sin(ang)*dist+'px');
+      p.style.fontSize=(20+Math.random()*22)+'px';
+      p.style.animationDuration=(1.2+Math.random()*0.8)+'s';
+      container.appendChild(p);setTimeout(()=>p.remove(),2300);
+    }
+  }else if(themeKey==='calm'){
+    for(let i=0;i<count;i++){
+      const p=document.createElement('div');p.className='particle calm-float';
+      p.textContent=emojiSet[Math.floor(Math.random()*emojiSet.length)];
+      p.style.left=(Math.random()*100)+'%';p.style.top='-30px';
+      p.style.setProperty('--drift',((Math.random()-0.5)*80)+'px');
+      p.style.fontSize=(18+Math.random()*20)+'px';
+      p.style.animationDuration=(3+Math.random()*1.5)+'s';
+      p.style.animationDelay=(Math.random()*0.8)+'s';
+      container.appendChild(p);setTimeout(()=>p.remove(),5000);
+    }
+  }else{
+    for(let i=0;i<count;i++){
+      const p=document.createElement('div');p.className='particle';
+      p.textContent=emojiSet[Math.floor(Math.random()*emojiSet.length)];
+      p.style.left=(Math.random()*100)+'%';p.style.top='-30px';
+      p.style.fontSize=(18+Math.random()*26)+'px';
+      p.style.animationDuration=(2+Math.random()*1.5)+'s';
+      p.style.animationDelay=(Math.random()*0.7)+'s';
+      container.appendChild(p);setTimeout(()=>p.remove(),4300);
+    }
+  }
+}
+function showMixedHint(){
+  const h=document.getElementById('mixed-hint');
+  h.textContent=state.mixedHints[Math.floor(Math.random()*state.mixedHints.length)];
+  h.classList.remove('show');void h.offsetWidth;h.classList.add('show');
+}
+function openSettings(){
+  document.getElementById('set-initial').value=state.initialBalance;
+  document.getElementById('set-bet').value=state.bet;
+  renderSymbolSettings();updateProbPanel();
+  document.getElementById('settings-modal').classList.add('show');
+}
+function closeSettings(){document.getElementById('settings-modal').classList.remove('show')}
+function renderSymbolSettings(){
+  const c=document.getElementById('symbol-settings');c.innerHTML='';
+  for(let i=0;i<3;i++){
+    const row=document.createElement('div');row.className='setting-row';
+    row.innerHTML=`<div class="setting-label"><div class="setting-label-title"><img src="${state.symbols[i]||''}">${state.names[i]}</div><div class="setting-label-hint">三同機率 % · 倍率</div></div><div class="setting-input-group"><input type="number" id="prob-${i}" min="0" max="100" step="0.5" value="${state.tripleProbs[i]}" onchange="updateProbPanel()"><span>%×</span><input type="number" id="mult-${i}" min="1" value="${state.multipliers[i]}" onchange="updateProbPanel()"></div>`;
+    c.appendChild(row);
+  }
+}
+function updateProbPanel(){
+  const ps=[0,1,2].map(i=>parseFloat(document.getElementById('prob-'+i).value)||0);
+  const ms=[0,1,2].map(i=>parseFloat(document.getElementById('mult-'+i).value)||1);
+  const total=ps.reduce((a,b)=>a+b,0);
+  const noHit=Math.max(0,100-total);
+  const ev=ps.reduce((a,p,i)=>a+(p/100)*ms[i],0);
+  const warn=total>100?'<br><span style="color:#E74C3C;font-weight:bold">⚠ 總機率超過 100%，請調低</span>':'';
+  document.getElementById('prob-panel').innerHTML=`三同總機率：<b>${total.toFixed(1)}%</b>　不中：<b>${noHit.toFixed(1)}%</b><br>長期期望值：<b>${(ev*100).toFixed(1)}%</b>　<span style="color:#8B4513">(100%=不賺不賠)</span>${warn}`;
+}
+function saveSettings(){
+  state.initialBalance=parseInt(document.getElementById('set-initial').value)||1000;
+  state.bet=parseInt(document.getElementById('set-bet').value)||10;
+  for(let i=0;i<3;i++){state.tripleProbs[i]=parseFloat(document.getElementById('prob-'+i).value)||0;state.multipliers[i]=parseInt(document.getElementById('mult-'+i).value)||1}
+  renderInfo();closeSettings();
+}
+function resetBalance(){if(confirm('確定重置運勢為起始值？')){state.balance=state.initialBalance;state.lastWin=0;renderInfo();closeSettings()}}
+function restart(){state.balance=state.initialBalance;state.lastWin=0;renderInfo();document.getElementById('gameover-modal').classList.remove('show')}
+
+function openExport(){if(!state.symbols.every(s=>s!==null)){alert('請先上傳 3 張御容');return}document.getElementById('export-modal').classList.add('show')}
+function closeExport(){document.getElementById('export-modal').classList.remove('show')}
+function doExport(){
+  if(!state.symbols.every(s=>s!==null)){alert('請先上傳 3 張御容');return}
+  document.getElementById('ambient-stars').innerHTML='';
+  document.getElementById('particles').innerHTML='';
+  // strip src from preview images in setup + reel images before serialization
+  for(let i=0;i<3;i++){
+    const img=document.getElementById('slot-preview-'+i);if(img)img.removeAttribute('src');
+    const rimg=document.getElementById('reel-img-'+i);if(rimg)rimg.removeAttribute('src');
+  }
+  const bgImg=document.getElementById('throne-bg-img');if(bgImg)bgImg.removeAttribute('src');
+  ['left','right'].forEach(s=>{const i=document.getElementById('imp-img-'+s);if(i)i.removeAttribute('src')});
+  for(let i=0;i<3;i++){const e=document.getElementById('info-bg-'+i);if(e)e.removeAttribute('src')}
+  let html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  // restore live DOM
+  state.symbols.forEach((s,i)=>{const rimg=document.getElementById('reel-img-'+i);if(rimg)rimg.src=s});
+  if(state.bgDataUrl)bgImg.src=state.bgDataUrl;
+  applyDecorations();
+  // bake into exported string
+  html=html.replace(/symbols:\[null,null,null\]/,'symbols:'+JSON.stringify(state.symbols));
+  if(state.bgDataUrl)html=html.replace(/bgDataUrl:null/,'bgDataUrl:'+JSON.stringify(state.bgDataUrl));
+  html=html.replace(/imperialUrls:\{left:null,right:null\}/,'imperialUrls:'+JSON.stringify(state.imperialUrls));
+  html=html.replace(/infoBgUrls:\[null,null,null\]/,'infoBgUrls:'+JSON.stringify(state.infoBgUrls));
+  if(state.musicDataUrl)html=html.replace(/musicDataUrl:null/,'musicDataUrl:'+JSON.stringify(state.musicDataUrl));
+  html=html.replace(/tune:\{[^}]+\}/,'tune:'+JSON.stringify(state.tune));
+  html=html.replace('id="setup-screen" class="screen"','id="setup-screen" class="screen" style="display:none"');
+  html=html.replace('id="game-screen" class="screen" style="display:none"','id="game-screen" class="screen" style="display:flex"');
+  const initScript='<'+'script>window.addEventListener("DOMContentLoaded",function(){state.symbols.forEach(function(s,i){var img=document.getElementById("reel-img-"+i);if(img)img.src=s});applyDecorations();if(state.musicDataUrl){var v=document.createElement("video");v.loop=true;v.volume=state.musicVolume;v.style.display="none";v.playsInline=true;v.preload="auto";v.src=state.musicDataUrl;document.body.appendChild(v);state.musicAudio=v}renderInfo();applyTune();var started=false;var startAll=function(){if(started)return;started=true;initAudio();if(state.musicAudio)state.musicAudio.play().catch(function(){});["click","touchend","keydown"].forEach(function(ev){document.body.removeEventListener(ev,startAll)})};["click","touchend","keydown"].forEach(function(ev){document.body.addEventListener(ev,startAll)})});</'+'script>';
+  html=html.replace('</body>',initScript+'</body>');
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='水豚王聖意占卜.html';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},1500);
+  closeExport();
+}
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&document.getElementById('game-screen').style.display!=='none'){e.preventDefault();spin()}});
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+# ===================================================================
+# 水豚王聖意占卜 .gitignore
+# ===================================================================
+
+# ===== 大型 standalone HTML（含 base64 圖音）=====
+# 這些是「成品」，從空殼版 + 素材生成的 derivative
+# 每改一次整個檔 hash 都變，會讓 repo 爆炸膨脹
+水豚王聖意占卜.html
+水豚王聖意占卜_成品.html
+capybara-fortune.html
+capybara-fortune_成品.html
+*_備份*.html
+*_backup*.html
+
+# ===== 大型二進位素材 =====
+# 如果不想 repo 膨脹（2.4MB MP3 × N 次 commit = 快速變大）
+# 取消下列註解就會排除
+# 2.背景音樂/*.mp3
+# 2.背景音樂/*.mp4
+# 1. 圖片素材/原始檔案/*.pptx
+
+# ===== Google Drive 系統暫存檔 =====
+desktop.ini
+.tmp.drivedownload
+.tmp.driveupload
+~$*
+
+# ===== OS 系統檔 =====
+Thumbs.db
+ehthumbs.db
+.DS_Store
+
+# ===== 編輯器暫存 =====
+.vscode/
+.idea/
+*.tmp
+*.swp
+*.swo
+*~
+
+# ===== Node / Python（以防萬一）=====
+node_modules/
+__pycache__/
+*.pyc
+.env
