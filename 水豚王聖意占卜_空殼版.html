@@ -35,6 +35,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .upload-label-title{font-weight:900;color:#3E1410;font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;letter-spacing:1px}
 .badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:1px}
 .b1{background:#C7E9F7;color:#1E5B8C}.b2{background:#FFD5C7;color:#B83C1C}.b3{background:#FFE5AA;color:#B87B00}
+.b4{background:#D4C5F9;color:#4A3D80}.b5{background:#E8D7C4;color:#6B4423}.b6{background:#C7F7D4;color:#1E6B3C}
 .b-opt{background:#E0E0E0;color:#555}.b-reco{background:#FFD700;color:#3E1410}
 .upload-label-hint{color:#8B4513;font-size:10px;margin-top:2px;line-height:1.4;font-style:italic;word-break:break-all}
 .upload-slot input{display:none}
@@ -69,6 +70,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .reel.win-calm{box-shadow:0 0 32px #4EC5E8,inset 0 0 30px rgba(78,197,232,0.7)}
 .reel.win-angry{box-shadow:0 0 32px #FF4742,inset 0 0 30px rgba(255,71,66,0.7)}
 .reel.win-happy{box-shadow:0 0 32px #FFD700,inset 0 0 30px rgba(255,215,0,0.8)}
+.reel.win-sleepy{box-shadow:0 0 32px #9B8EC7,inset 0 0 30px rgba(155,142,199,0.6)}
+.reel.win-puzzled{box-shadow:0 0 32px #C89858,inset 0 0 30px rgba(200,152,88,0.65)}
+.reel.win-proud{box-shadow:0 0 32px #3DDC84,inset 0 0 30px rgba(61,220,132,0.7)}
 
 .throne-info{position:absolute;left:6%;top:78%;width:88%;height:11%;display:flex;gap:1.5%;z-index:3;align-items:center;padding:0.5%}
 .info-box{flex:1;background:linear-gradient(180deg,rgba(10,6,16,0.9) 0%,rgba(26,15,40,0.9) 100%);color:#4AFF8C;padding:4px 4px;border-radius:6px;text-align:center;border:1.5px solid #FFD700;box-shadow:0 0 4px rgba(0,0,0,0.5) inset,0 0 10px rgba(255,215,0,0.5);min-width:0;backdrop-filter:blur(2px);height:100%;display:flex;flex-direction:column;justify-content:center;gap:2px;position:relative;overflow:hidden}
@@ -104,6 +108,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 @keyframes angry-flicker{from{filter:brightness(1)}to{filter:brightness(1.3)}}
 .win-overlay.happy .win-overlay-bg{background:conic-gradient(from 0deg at 50% 50%,#FFD700,#FF6B9D,#6C5CE7,#4ECDC4,#FFE66D,#FFD700);opacity:0.9;animation:happy-rotate 4s linear infinite}
 @keyframes happy-rotate{to{transform:rotate(360deg)}}
+.win-overlay.sleepy .win-overlay-bg{background:radial-gradient(ellipse at center,rgba(155,142,199,0.6) 0%,rgba(80,60,130,0.55) 45%,rgba(20,15,40,0.92) 100%);animation:sleepy-drift 4s ease-in-out infinite}
+@keyframes sleepy-drift{0%,100%{opacity:0.9;filter:blur(0px)}50%{opacity:0.7;filter:blur(2px)}}
+.win-overlay.puzzled .win-overlay-bg{background:radial-gradient(circle at center,rgba(230,200,150,0.65) 0%,rgba(160,110,60,0.5) 40%,rgba(50,30,15,0.9) 100%);animation:puzzled-tilt 3s ease-in-out infinite}
+@keyframes puzzled-tilt{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+.win-overlay.proud .win-overlay-bg{background:radial-gradient(circle at center,rgba(80,220,150,0.75) 0%,rgba(30,160,90,0.55) 40%,rgba(10,50,30,0.9) 100%);animation:proud-pulse 1.8s ease-in-out infinite}
+@keyframes proud-pulse{0%,100%{opacity:1;filter:brightness(1.1)}50%{opacity:0.85;filter:brightness(1.35)}}
 .win-overlay-content{position:relative;z-index:2;text-align:center;padding:20px;max-width:90vw;animation:overlay-pop 0.6s cubic-bezier(.3,1.6,.5,1)}
 @keyframes overlay-pop{0%{opacity:0;transform:scale(0.3) rotate(-10deg)}60%{transform:scale(1.1) rotate(2deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
 .win-title{font-size:42px;font-weight:900;letter-spacing:4px;margin-bottom:14px;line-height:1.15;display:inline-block}
@@ -112,11 +122,19 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 @keyframes title-shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-3px,2px)}50%{transform:translate(3px,-2px)}75%{transform:translate(-2px,-3px)}}
 .win-overlay.happy .win-title{background:linear-gradient(90deg,#FFD700,#FF6B9D,#6C5CE7,#4ECDC4,#FFD700);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gold-shimmer 2s linear infinite;filter:drop-shadow(0 0 15px rgba(255,215,0,0.9))}
 @keyframes gold-shimmer{to{background-position:200% center}}
+.win-overlay.sleepy .win-title{color:#FFF;text-shadow:0 0 18px rgba(180,170,220,1),0 0 36px rgba(130,120,190,0.85),0 2px 4px rgba(0,0,0,0.5);opacity:0.95}
+.win-overlay.puzzled .win-title{color:#FFE88A;text-shadow:0 0 12px rgba(200,152,88,0.9),0 0 24px rgba(160,110,60,0.8),2px 2px 0 #3E2410;animation:puzzled-wobble 2.2s ease-in-out infinite}
+@keyframes puzzled-wobble{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.win-overlay.proud .win-title{background:linear-gradient(90deg,#FFD700,#3DDC84,#FFD700,#3DDC84);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:proud-shine 2.5s linear infinite;filter:drop-shadow(0 0 12px rgba(61,220,132,0.85))}
+@keyframes proud-shine{to{background-position:200% center}}
 .win-sub{font-size:17px;font-weight:bold;padding:10px 22px;border-radius:999px;display:inline-block;letter-spacing:2px;backdrop-filter:blur(6px);max-width:88vw}
 .win-overlay.calm .win-sub{background:rgba(255,255,255,0.25);color:#FFF;border:2px solid rgba(255,255,255,0.7)}
 .win-overlay.angry .win-sub{background:rgba(0,0,0,0.75);color:#FFD700;border:2px solid #FFD700;animation:sub-warn 0.6s infinite alternate}
 @keyframes sub-warn{from{box-shadow:0 0 4px #FFD700}to{box-shadow:0 0 20px #FFD700}}
 .win-overlay.happy .win-sub{background:rgba(255,255,255,0.95);color:#B87B00;border:3px solid #FFD700;box-shadow:0 0 26px rgba(255,215,0,0.8)}
+.win-overlay.sleepy .win-sub{background:rgba(40,30,70,0.8);color:#E0D4F5;border:2px solid rgba(180,170,220,0.7);backdrop-filter:blur(8px)}
+.win-overlay.puzzled .win-sub{background:rgba(80,50,20,0.8);color:#FFE88A;border:2px solid rgba(200,152,88,0.8);box-shadow:0 0 12px rgba(200,152,88,0.5)}
+.win-overlay.proud .win-sub{background:rgba(255,255,255,0.95);color:#1E6B3C;border:3px solid #3DDC84;box-shadow:0 0 22px rgba(61,220,132,0.7)}
 .win-amount{font-size:24px;font-weight:900;margin-top:16px;color:#FFD700;text-shadow:0 2px 8px rgba(0,0,0,0.7);font-family:'Courier New',monospace;letter-spacing:1px}
 .particles-container{position:fixed;inset:0;pointer-events:none;z-index:500;overflow:hidden}
 .particle{position:absolute;font-size:26px;animation:particle-fall 2.8s ease-out forwards}
@@ -189,6 +207,21 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <div class="upload-preview"><span id="slot-placeholder-2">🎉</span><img id="slot-preview-2" style="display:none"></div>
         <div class="upload-label"><div class="upload-label-title">歡樂<span class="badge b3">20×</span></div><div class="upload-label-hint">龍心大悅 · 所求皆准</div></div>
         <input type="file" accept="image/*" onchange="handleUpload(2,this)">
+      </label>
+      <label class="upload-slot" id="slot-3">
+        <div class="upload-preview"><span id="slot-placeholder-3">😴</span><img id="slot-preview-3" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">昏睡<span class="badge b4">3×</span></div><div class="upload-label-hint">王在打盹 · 改日再議</div></div>
+        <input type="file" accept="image/*" onchange="handleUpload(3,this)">
+      </label>
+      <label class="upload-slot" id="slot-4">
+        <div class="upload-preview"><span id="slot-placeholder-4">🤔</span><img id="slot-preview-4" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">狐疑<span class="badge b5">4×</span></div><div class="upload-label-hint">需再詳述 · 此中有疑</div></div>
+        <input type="file" accept="image/*" onchange="handleUpload(4,this)">
+      </label>
+      <label class="upload-slot" id="slot-5">
+        <div class="upload-preview"><span id="slot-placeholder-5">😎</span><img id="slot-preview-5" style="display:none"></div>
+        <div class="upload-label"><div class="upload-label-title">得意<span class="badge b6">15×</span></div><div class="upload-label-hint">料事如神 · 正中下懷</div></div>
+        <input type="file" accept="image/*" onchange="handleUpload(5,this)">
       </label>
     </div>
     
@@ -342,19 +375,22 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 <script>
 const state={
-  symbols:[null,null,null],bgDataUrl:null,
+  symbols:[null,null,null,null,null,null],bgDataUrl:null,
   imperialUrls:{left:null,right:null},
   infoBgUrls:[null,null,null],
   musicDataUrl:null,musicAudio:null,musicVolume:0.5,
   tune:{left:2.5,top:34,w:95.5,h:34.5,ileft:0,itop:78,iw:98,ih:20,sl:0,sr:80,st:21.5,sw:100,sh:8,nb:33,nfs:28},
-  names:['平靜','憤怒','歡樂'],
+  names:['平靜','憤怒','歡樂','昏睡','狐疑','得意'],
   quotes:{
-    calm:[{title:'老衲心如止水',sub:'有事速速奏來，無妨 🙏',emoji:['💧','🪷','☁️','✨','🕊️','📜']},{title:'朕今日甚安',sub:'有事啟奏，無事退朝',emoji:['💧','🪷','☁️','✨','🍵','📜']},{title:'吾心靜如秋水',sub:'有話直說，老衲聽著',emoji:['🕊️','☁️','✨','🪷','💧','📋']},{title:'老衲入禪中',sub:'汝之事...准了',emoji:['🧘','🪷','☁️','💧','✨','☕']}],
+    calm:[{title:'老衲心如止水',sub:'有事速速奏來，無妨 🙏',emoji:['💧','🪷','☁️','✨','🕊️','📜']},{title:'朕今日甚安',sub:'有事啟奏，無事退朝',emoji:['💧','🪷','☁️','✨','🍵','📜']},{title:'吾心靜如秋水',sub:'有話直說，老衲聽著',emoji:['🕊️','☁️','✨','🪷','💧','📋']},{title:'老衲入禪中',sub:'汝之事...准了',emoji:['🧘','🪷','☁️','💧','✨','☕']},{title:'朕心寧靜',sub:'有話直說，老衲靜聽',emoji:['🕊️','🪷','💧','☁️','✨','📜']},{title:'古井無波',sub:'汝所奏之事，且細細道來',emoji:['💧','🪷','☁️','✨','🕊️','☕']},{title:'今日閒適',sub:'有要事便講，老衲不拘',emoji:['🧘','🪷','☁️','✨','🍵','📜']},{title:'老衲神清氣爽',sub:'此事...准了便是',emoji:['💧','🪷','☁️','✨','🕊️','📜']},{title:'靜觀其變',sub:'汝且慢慢道來',emoji:['🕊️','☁️','✨','🪷','💧','📋']}],
     angry:[{title:'讓老衲指導指導',sub:'汝且坐下，本王親自點撥 ⚠️',emoji:['🔥','⚡','💢','📋','👊','📌']},{title:'朕甚為不悅！',sub:'汝這方案...需從頭重做',emoji:['🔥','⚡','💢','🌋','📋','👊']},{title:'汝可知錯否？！',sub:'過來！老衲必好好教教汝',emoji:['🔥','⚡','💢','👊','📌','🗯️']},{title:'這都不會？！',sub:'老衲已言過三遍矣...',emoji:['🔥','💢','⚡','📋','🗯️','🌋']},{title:'豈有此理！',sub:'本王今日倒要聽汝如何解釋',emoji:['🔥','⚡','💢','🌋','👊','📌']}],
-    happy:[{title:'老衲龍心大悅！',sub:'所求之事，盡管奏來 ✨',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','📈']},{title:'哈哈哈！甚合吾意',sub:'今日汝所求，皆可准',emoji:['⭐','🎵','💎','🎊','🌟','💰','🏆','📈']},{title:'大善！大善！',sub:'此時不請，更待何時？',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','🏆']},{title:'妙哉！妙哉！',sub:'此事老衲全力支持！',emoji:['⭐','💎','🎊','🌟','💰','🎁','📈','🏆']},{title:'朕心花怒放',sub:'汝且趁機多要些預算 😏',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','📈']}]
+    happy:[{title:'老衲龍心大悅！',sub:'所求之事，盡管奏來 ✨',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','📈']},{title:'哈哈哈！甚合吾意',sub:'今日汝所求，皆可准',emoji:['⭐','🎵','💎','🎊','🌟','💰','🏆','📈']},{title:'大善！大善！',sub:'此時不請，更待何時？',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','🏆']},{title:'妙哉！妙哉！',sub:'此事老衲全力支持！',emoji:['⭐','💎','🎊','🌟','💰','🎁','📈','🏆']},{title:'朕心花怒放',sub:'汝且趁機多要些預算 😏',emoji:['⭐','🎵','💎','🎊','🌟','💰','🎁','📈']}],
+    sleepy:[{title:'老衲打個盹',sub:'此事...改日再議 💤',emoji:['💤','😴','☕','🌙','🪷','🕯️']},{title:'朕欲就寢',sub:'汝且下去，明日再奏',emoji:['💤','😴','🌙','☁️','🫧','🕯️']},{title:'呼...呼...',sub:'（王已熟睡） 汝先退下吧',emoji:['💤','😴','💤','🌙','☁️','🫧']},{title:'寢宮之事容後再議',sub:'夢裡自有分曉',emoji:['💤','😴','🌙','✨','☁️','🪞']},{title:'老衲眼皮沉重',sub:'汝所奏...明日再說',emoji:['💤','😴','☕','🫧','🌙','🕯️']},{title:'老衲累了',sub:'下次再奏 💤',emoji:['💤','😴','☕','🌙','🪷','🕯️']},{title:'朕乏了',sub:'汝且跪安吧',emoji:['💤','😴','🌙','🫧','☁️','🕯️']},{title:'睏意襲來',sub:'此議，且擱一宿',emoji:['💤','😴','🌙','💭','☕','🪷']}],
+    puzzled:[{title:'此事蹊蹺',sub:'汝且把始末再說一遍',emoji:['❓','🤔','📜','🔍','💭','📋']},{title:'朕心存疑慮',sub:'老衲需再三斟酌',emoji:['❓','🤨','📜','🔍','💭','⚖️']},{title:'汝這方案...',sub:'其中是否另有玄機？',emoji:['❓','🤔','🔍','📜','💭','⚖️']},{title:'且慢！讓朕細看',sub:'此中細節容朕推敲',emoji:['❓','🤔','📜','🔍','💭','📋']},{title:'話中有話？',sub:'汝再詳述一遍給老衲聽',emoji:['❓','🤨','🔍','💭','📜','⚖️']},{title:'汝此事...',sub:'另有隱情否？',emoji:['❓','🤔','📜','🔍','💭','⚖️']},{title:'此中有詐？',sub:'朕必究其本末',emoji:['❓','🤨','🔍','📜','💭','⚖️']},{title:'容朕詳察',sub:'再作定奪',emoji:['❓','🤔','📜','🔍','💭','📋']}],
+    proud:[{title:'哈哈！朕料事如神',sub:'此事正中下懷 ✨',emoji:['👑','⭐','✨','🎯','🏆','📜']},{title:'正如老衲所料',sub:'汝盡管放手去做',emoji:['👑','⭐','✨','🎯','🏆','🎖️']},{title:'朕英明睿智',sub:'此議甚合吾意',emoji:['👑','⭐','✨','🎯','🏆','💎']},{title:'老衲早已預見',sub:'汝今日方才領悟？',emoji:['👑','⭐','✨','🎯','💎','📜']},{title:'天機朕早已看穿',sub:'汝之提議...准了，重賞',emoji:['👑','⭐','✨','🎯','🏆','💰']},{title:'哼哼',sub:'本王早料到矣',emoji:['👑','⭐','✨','🎯','🏆','😏']},{title:'此乃朕之運籌',sub:'帷幄之中，決勝千里',emoji:['👑','⭐','✨','🎯','🏆','📜']},{title:'盡在朕掌握',sub:'汝今日方才明白？',emoji:['👑','⭐','✨','🎯','🏆','💎']}]
   },
   mixedHints:['老衲今日心情嘛…難說','此事容老衲三思','汝先退下，改日再議','莫催莫急，老衲正想著','吾意未定，再占一卦？','此事複雜，老衲需再斟酌','嗯...汝先放著，老衲看看','龍意難測，且觀且行'],
-  balance:1000,initialBalance:1000,bet:10,tripleProbs:[40,10,30],weights:[5,3,2],multipliers:[2,5,20],
+  balance:1000,initialBalance:1000,bet:10,tripleProbs:[40,10,30,5,3,2],weights:[5,3,2,4,3,2],multipliers:[2,5,20,3,4,15],
   lastWin:0,spinning:false,audioCtx:null,masterGain:null,soundOn:true
 };
 
@@ -476,7 +512,7 @@ function applyDecorations(){
 function startGame(){
   document.getElementById('setup-screen').style.display='none';
   document.getElementById('game-screen').style.display='flex';
-  state.symbols.forEach((s,i)=>document.getElementById('reel-img-'+i).src=s);
+  state.symbols.forEach((s,i)=>{const img=document.getElementById('reel-img-'+i);if(img)img.src=s});
   applyDecorations();
   const t=state.tune;
   ['left','top','w','h','ileft','itop','iw','ih','sl','sr','st','sw','sh','nb','nfs'].forEach(k=>{
@@ -601,20 +637,26 @@ function pickWeighted(){
 function spin(){
   if(state.spinning)return;
   if(state.balance<state.bet){document.getElementById('gameover-modal').classList.add('show');return}
+  // [NEW] 使用者再次占卜時，提前關閉上一次的 win overlay
+  const _ov=document.getElementById('win-overlay');
+  if(_ov.classList.contains('show')){
+    _ov.classList.remove('show');
+    if(state._winTimer){clearTimeout(state._winTimer);state._winTimer=null}
+  }
   initAudio();
   if(state.musicAudio&&state.musicAudio.paused)playMusic();
   state.spinning=true;state.balance-=state.bet;renderInfo();
   document.getElementById('spin-btn').disabled=true;
-  document.querySelectorAll('.reel').forEach(r=>r.classList.remove('win','win-calm','win-angry','win-happy'));
+  document.querySelectorAll('.reel').forEach(r=>r.classList.remove('win','win-calm','win-angry','win-happy','win-sleepy','win-puzzled','win-proud'));
   playLever();duckMusic();
   const r=Math.random()*100;let cum=0,forceT=-1;
-  for(let i=0;i<3;i++){cum+=state.tripleProbs[i];if(r<cum){forceT=i;break}}
+  for(let i=0;i<state.tripleProbs.length;i++){cum+=state.tripleProbs[i];if(r<cum){forceT=i;break}}
   let finals;
   if(forceT>=0){finals=[forceT,forceT,forceT]}
-  else{do{finals=[Math.floor(Math.random()*3),Math.floor(Math.random()*3),Math.floor(Math.random()*3)]}while(finals[0]===finals[1]&&finals[1]===finals[2])}
+  else{do{finals=[Math.floor(Math.random()*state.symbols.length),Math.floor(Math.random()*state.symbols.length),Math.floor(Math.random()*state.symbols.length)]}while(finals[0]===finals[1]&&finals[1]===finals[2])}
   document.querySelectorAll('.reel').forEach(r=>r.classList.add('spinning'));
   const tickInt=setInterval(playTick,90);
-  const flickers=[0,1,2].map(i=>setInterval(()=>{document.getElementById('reel-img-'+i).src=state.symbols[Math.floor(Math.random()*3)]},70));
+  const flickers=[0,1,2].map(i=>setInterval(()=>{document.getElementById('reel-img-'+i).src=state.symbols[Math.floor(Math.random()*state.symbols.length)]},70));
   [1200,1700,2300].forEach((t,i)=>{
     setTimeout(()=>{
       clearInterval(flickers[i]);
@@ -629,11 +671,11 @@ function finishSpin(finals){
   const [a,b,c]=finals;let win=0;let restoreDelay=500;
   if(a===b&&b===c){
     const mult=state.multipliers[a];win=state.bet*mult;
-    const themeKey=['calm','angry','happy'][a];
+    const themeKey=['calm','angry','happy','sleepy','puzzled','proud'][a];
     document.querySelectorAll('.reel').forEach(r=>{r.classList.add('win','win-'+themeKey)});
     showTripleWin(a,win,mult);
-    if(themeKey==='calm'){playCalmWin();restoreDelay=2800}
-    else if(themeKey==='angry'){playAngryWin();restoreDelay=3200}
+    if(themeKey==='calm'||themeKey==='sleepy'){playCalmWin();restoreDelay=2800}
+    else if(themeKey==='angry'||themeKey==='puzzled'){playAngryWin();restoreDelay=3200}
     else{playHappyWin();restoreDelay=4500}
   }else{playLose();showMixedHint()}
   setTimeout(restoreMusic,restoreDelay);
@@ -642,7 +684,7 @@ function finishSpin(finals){
   if(state.balance<state.bet){setTimeout(()=>document.getElementById('gameover-modal').classList.add('show'),win>0?4500:1200)}
 }
 function showTripleWin(symIdx,amount,mult){
-  const themeKey=['calm','angry','happy'][symIdx];
+  const themeKey=['calm','angry','happy','sleepy','puzzled','proud'][symIdx];
   const variants=state.quotes[themeKey];
   const q=variants[Math.floor(Math.random()*variants.length)];
   const overlay=document.getElementById('win-overlay');
@@ -651,13 +693,17 @@ function showTripleWin(symIdx,amount,mult){
   document.getElementById('win-sub').textContent=q.sub;
   document.getElementById('win-amount').textContent='+ '+amount+' 運勢點 ('+mult+'×)';
   spawnThemedParticles(themeKey,q.emoji);
-  const dur=themeKey==='happy'?4200:(themeKey==='angry'?3000:2600);
-  setTimeout(()=>overlay.classList.remove('show'),dur);
+  const dur=5000;
+  if(state._winTimer)clearTimeout(state._winTimer);
+  state._winTimer=setTimeout(()=>overlay.classList.remove('show'),dur);
 }
 function spawnThemedParticles(themeKey,emojiSet){
   const container=document.getElementById('particles');
-  const count=themeKey==='happy'?95:(themeKey==='angry'?60:55);
-  if(themeKey==='angry'){
+  const angryGroup=(themeKey==='angry'||themeKey==='puzzled');
+  const calmGroup=(themeKey==='calm'||themeKey==='sleepy');
+  const happyGroup=(themeKey==='happy'||themeKey==='proud');
+  const count=happyGroup?95:(angryGroup?60:55);
+  if(angryGroup){
     for(let i=0;i<count;i++){
       const p=document.createElement('div');p.className='particle angry-burst';
       p.textContent=emojiSet[Math.floor(Math.random()*emojiSet.length)];
@@ -670,7 +716,7 @@ function spawnThemedParticles(themeKey,emojiSet){
       p.style.animationDuration=(1.2+Math.random()*0.8)+'s';
       container.appendChild(p);setTimeout(()=>p.remove(),2300);
     }
-  }else if(themeKey==='calm'){
+  }else if(calmGroup){
     for(let i=0;i<count;i++){
       const p=document.createElement('div');p.className='particle calm-float';
       p.textContent=emojiSet[Math.floor(Math.random()*emojiSet.length)];
@@ -707,15 +753,15 @@ function openSettings(){
 function closeSettings(){document.getElementById('settings-modal').classList.remove('show')}
 function renderSymbolSettings(){
   const c=document.getElementById('symbol-settings');c.innerHTML='';
-  for(let i=0;i<3;i++){
+  for(let i=0;i<state.names.length;i++){
     const row=document.createElement('div');row.className='setting-row';
     row.innerHTML=`<div class="setting-label"><div class="setting-label-title"><img src="${state.symbols[i]||''}">${state.names[i]}</div><div class="setting-label-hint">三同機率 % · 倍率</div></div><div class="setting-input-group"><input type="number" id="prob-${i}" min="0" max="100" step="0.5" value="${state.tripleProbs[i]}" onchange="updateProbPanel()"><span>%×</span><input type="number" id="mult-${i}" min="1" value="${state.multipliers[i]}" onchange="updateProbPanel()"></div>`;
     c.appendChild(row);
   }
 }
 function updateProbPanel(){
-  const ps=[0,1,2].map(i=>parseFloat(document.getElementById('prob-'+i).value)||0);
-  const ms=[0,1,2].map(i=>parseFloat(document.getElementById('mult-'+i).value)||1);
+  const ps=state.names.map((_,i)=>parseFloat(document.getElementById('prob-'+i).value)||0);
+  const ms=state.names.map((_,i)=>parseFloat(document.getElementById('mult-'+i).value)||1);
   const total=ps.reduce((a,b)=>a+b,0);
   const noHit=Math.max(0,100-total);
   const ev=ps.reduce((a,p,i)=>a+(p/100)*ms[i],0);
@@ -725,7 +771,7 @@ function updateProbPanel(){
 function saveSettings(){
   state.initialBalance=parseInt(document.getElementById('set-initial').value)||1000;
   state.bet=parseInt(document.getElementById('set-bet').value)||10;
-  for(let i=0;i<3;i++){state.tripleProbs[i]=parseFloat(document.getElementById('prob-'+i).value)||0;state.multipliers[i]=parseInt(document.getElementById('mult-'+i).value)||1}
+  for(let i=0;i<state.names.length;i++){state.tripleProbs[i]=parseFloat(document.getElementById('prob-'+i).value)||0;state.multipliers[i]=parseInt(document.getElementById('mult-'+i).value)||1}
   renderInfo();closeSettings();
 }
 function resetBalance(){if(confirm('確定重置運勢為起始值？')){state.balance=state.initialBalance;state.lastWin=0;renderInfo();closeSettings()}}
@@ -738,7 +784,8 @@ function doExport(){
   document.getElementById('ambient-stars').innerHTML='';
   document.getElementById('particles').innerHTML='';
   // strip src from preview images in setup + reel images before serialization
-  for(let i=0;i<3;i++){
+  // slot-preview 有 6 個（御容）、reel-img 只有 3 個，都用 null check safe iterate
+  for(let i=0;i<state.symbols.length;i++){
     const img=document.getElementById('slot-preview-'+i);if(img)img.removeAttribute('src');
     const rimg=document.getElementById('reel-img-'+i);if(rimg)rimg.removeAttribute('src');
   }
@@ -759,12 +806,14 @@ function doExport(){
   if(state.bgDataUrl)bgImg.src=state.bgDataUrl;
   applyDecorations();
   // bake into exported string
-  html=html.replace(/symbols:\[null,null,null\]/,'symbols:'+JSON.stringify(state.symbols));
+  html=html.replace(/symbols:\[null,null,null,null,null,null\]/,'symbols:'+JSON.stringify(state.symbols));
   if(state.bgDataUrl)html=html.replace(/bgDataUrl:null/,'bgDataUrl:'+JSON.stringify(state.bgDataUrl));
   html=html.replace(/imperialUrls:\{left:null,right:null\}/,'imperialUrls:'+JSON.stringify(state.imperialUrls));
   html=html.replace(/infoBgUrls:\[null,null,null\]/,'infoBgUrls:'+JSON.stringify(state.infoBgUrls));
   if(state.musicDataUrl)html=html.replace(/musicDataUrl:null/,'musicDataUrl:'+JSON.stringify(state.musicDataUrl));
   html=html.replace(/tune:\{[^}]+\}/,'tune:'+JSON.stringify(state.tune));
+  // [NEW] bake 使用者設定的 balance/initialBalance/bet/tripleProbs/weights/multipliers（之前漏掉會導致設定 modal 修改的值被匯出版還原成預設）
+  html=html.replace(/balance:\d+,initialBalance:\d+,bet:\d+,tripleProbs:\[[^\]]+\],weights:\[[^\]]+\],multipliers:\[[^\]]+\]/,'balance:'+state.initialBalance+',initialBalance:'+state.initialBalance+',bet:'+state.bet+',tripleProbs:'+JSON.stringify(state.tripleProbs)+',weights:'+JSON.stringify(state.weights)+',multipliers:'+JSON.stringify(state.multipliers));
   // [已移除] 不再需要 screen display replace——上面 outerHTML 序列化時已帶目標 display 狀態
   const initScript='<'+'script>window.addEventListener("DOMContentLoaded",function(){state.symbols.forEach(function(s,i){var img=document.getElementById("reel-img-"+i);if(img)img.src=s});applyDecorations();if(state.musicDataUrl){var v=document.createElement("video");v.loop=true;v.volume=state.musicVolume;v.style.display="none";v.playsInline=true;v.preload="auto";v.src=state.musicDataUrl;document.body.appendChild(v);state.musicAudio=v}renderInfo();["left","top","w","h","ileft","itop","iw","ih","sl","sr","st","sw","sh","nb","nfs"].forEach(function(k){var el=document.getElementById("tune-"+k);if(el){el.value=state.tune[k];var v=document.getElementById("tune-"+k+"-v");if(v)v.textContent=state.tune[k]}});applyTune();var started=false;var startAll=function(){if(started)return;started=true;initAudio();if(state.musicAudio)state.musicAudio.play().catch(function(){});["click","touchend","keydown"].forEach(function(ev){document.body.removeEventListener(ev,startAll)})};["click","touchend","keydown"].forEach(function(ev){document.body.addEventListener(ev,startAll)})});</'+'script>';
   // [FIX 關鍵] 用 lastIndexOf 定位真正的 body closing tag；不能用 html.replace('</body>', ...)，
